@@ -86,6 +86,23 @@ function fireConfetti() {
 
 const publicUrl = slug => `${window.location.origin}/?empresa=${slug}`;
 
+// Foto real e contextual por tipo de serviço (com fallback seguro)
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=600&q=80";
+const SERVICE_IMG = [
+  { kw: ["elétr","eletr","tomada","chuveiro","fiação","disjuntor"], img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80" },
+  { kw: ["encan","hidrá","hidra","água","agua","vazamento","torneira","cano","pia"], img: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=600&q=80" },
+  { kw: ["móvei","movei","montag","marcen","prateleira","armário","armario"], img: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80" },
+  { kw: ["pintur","pintor","parede","tinta"], img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80" },
+  { kw: ["limp","faxina"], img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80" },
+  { kw: ["jardim","jardin","poda","grama"], img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80" },
+  { kw: ["ar-condicionado","ar condicionado","climatiz","refriger"], img: "https://images.unsplash.com/photo-1631545806609-c2b999c9f9f4?auto=format&fit=crop&w=600&q=80" },
+];
+function serviceImage(name = "") {
+  const n = name.toLowerCase();
+  const hit = SERVICE_IMG.find(s => s.kw.some(k => n.includes(k)));
+  return hit ? hit.img : FALLBACK_IMG;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    CONTEXT  (Auth + dados REAIS via Supabase)
    ═══════════════════════════════════════════════════════════════ */
@@ -345,13 +362,28 @@ function SellerServices({ tenant }) {
           <div className="text-xs font-bold tracking-widest uppercase" style={{color: tenant.brand_color}}>Nossos serviços</div>
           <h2 className="text-3xl sm:text-4xl font-black mt-2 text-slate-900">Tudo o que sua casa precisa</h2>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((s,i) => (
-            <div key={s.id || i} className="group bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style={{background:`${tenant.brand_color}15`}}>{s.icon}</div>
-              <h3 className="font-bold text-lg text-slate-900">{s.name}</h3>
-              <p className="text-sm text-slate-500 mt-1">A partir de</p>
-              <div className="text-2xl font-black mt-3" style={{color: tenant.brand_color}}>{brl(s.price)}</div>
+            <div key={s.id || i} className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition">
+              <div className="relative h-44 overflow-hidden">
+                <img
+                  src={s.image || serviceImage(s.name)}
+                  onError={(e) => { e.currentTarget.src = FALLBACK_IMG; }}
+                  alt={s.name}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"/>
+                <div className="absolute top-3 left-3 w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg" style={{background: tenant.brand_color}}>{s.icon}</div>
+                <h3 className="absolute bottom-3 left-4 right-4 font-black text-lg text-white drop-shadow">{s.name}</h3>
+              </div>
+              <div className="p-5 flex items-end justify-between">
+                <div>
+                  <p className="text-xs text-slate-500">A partir de</p>
+                  <div className="text-2xl font-black" style={{color: tenant.brand_color}}>{brl(s.price)}</div>
+                </div>
+                <a href="#orcamento" className="text-sm font-bold px-3 py-2 rounded-lg text-white shadow" style={{background: tenant.brand_color}}>Orçar</a>
+              </div>
             </div>
           ))}
         </div>
