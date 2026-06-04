@@ -575,39 +575,35 @@ function HomePage() {
         )}
       </header>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 md:py-24 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
-          <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-orange-200 text-xs font-bold text-orange-700 shadow-sm">
-              🔥 +2.300 profissionais já lotam a agenda com a gente
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.03] text-slate-900 mt-6">
-              Tenha seu <span className="text-orange-600">próprio site</span> e deixe ele <span className="text-orange-600">vender por você</span> — 24h por dia.
-            </h1>
-            <p className="mt-6 text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
-              Enquanto você trabalha, seu site capta clientes, agenda serviços, responde no WhatsApp e organiza seu financeiro. <b className="text-slate-900">Você só aparece para fazer o serviço e receber.</b>
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <button onClick={() => setRoute("signup")} className="px-7 py-4 rounded-xl bg-orange-600 text-white font-bold shadow-xl shadow-orange-600/30 hover:bg-orange-700 hover:-translate-y-0.5 transition flex items-center justify-center gap-2">Criar meu site grátis (15 dias) <ArrowRight size={18}/></button>
-              <a href="#como" className="px-7 py-4 rounded-xl bg-white border-2 border-slate-900 font-bold hover:bg-slate-900 hover:text-white transition flex items-center justify-center gap-2"><Play size={16}/> Como funciona</a>
-            </div>
-            <div className="mt-7 flex items-center gap-5 justify-center lg:justify-start text-sm text-slate-600">
-              <div className="flex items-center gap-1.5"><Check size={16} className="text-green-600"/> Sem cartão</div>
-              <div className="flex items-center gap-1.5"><Check size={16} className="text-green-600"/> Pronto em minutos</div>
-              <div className="flex items-center gap-1.5"><Check size={16} className="text-green-600"/> Cancele quando quiser</div>
-            </div>
+      {/* HERO com vídeo de fundo */}
+      <section className="relative overflow-hidden min-h-[88vh] flex items-center">
+        <video
+          autoPlay muted loop playsInline preload="auto"
+          poster={IMG.hero}
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/hero-bg.mp4" type="video/mp4" />
+        </video>
+        {/* overlay para legibilidade */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-slate-950/85"/>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-20 text-center text-white">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-xs font-bold text-orange-300">
+            🔥 +2.300 profissionais já lotam a agenda com a gente
           </div>
-          <div className="relative">
-            <img src={IMG.hero} alt="Profissional de reparos" className="w-full h-[320px] sm:h-[420px] object-cover rounded-3xl shadow-2xl"/>
-            <div className="absolute -bottom-5 -left-3 sm:-left-5 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-green-100 text-green-600 flex items-center justify-center"><Calendar size={20}/></div>
-              <div><div className="text-xs text-slate-500">Novo agendamento</div><div className="font-bold text-sm">+1 serviço hoje 🎉</div></div>
-            </div>
-            <div className="absolute -top-4 -right-2 sm:-right-4 bg-white rounded-2xl shadow-xl p-4 hidden sm:flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center"><DollarSign size={20}/></div>
-              <div><div className="text-xs text-slate-500">Faturamento/mês</div><div className="font-bold text-sm">R$ 12.480</div></div>
-            </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight leading-[1.03] mt-6">
+            Tenha seu <span className="text-orange-500">próprio site</span><br className="hidden sm:block"/> e deixe ele <span className="text-orange-500">vender por você</span>.
+          </h1>
+          <p className="mt-6 text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto">
+            Enquanto você trabalha, seu site capta clientes, agenda serviços, responde no WhatsApp e organiza seu financeiro — <b className="text-white">24 horas por dia</b>.
+          </p>
+          <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
+            <button onClick={() => setRoute("signup")} className="px-8 py-4 rounded-xl bg-orange-600 text-white font-bold text-lg shadow-2xl shadow-orange-600/40 hover:bg-orange-700 hover:-translate-y-0.5 transition flex items-center justify-center gap-2">Criar meu site grátis <ArrowRight size={20}/></button>
+            <a href="#como" className="px-8 py-4 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white font-bold hover:bg-white hover:text-slate-900 transition flex items-center justify-center gap-2"><Play size={18}/> Como funciona</a>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-5 justify-center text-sm text-slate-200">
+            <div className="flex items-center gap-1.5"><Check size={16} className="text-green-400"/> 15 dias grátis</div>
+            <div className="flex items-center gap-1.5"><Check size={16} className="text-green-400"/> Sem cartão</div>
+            <div className="flex items-center gap-1.5"><Check size={16} className="text-green-400"/> Pronto em minutos</div>
           </div>
         </div>
       </section>
