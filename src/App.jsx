@@ -161,6 +161,14 @@ function Provider({ children }) {
     return true;
   };
 
+  const loginGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+    if (error) alert("Não foi possível entrar com Google: " + error.message);
+  };
+
   const logout = async () => { await supabase.auth.signOut(); setProfile(null); setSession(null); setRoute("home"); };
 
   const checkSlug = async (slug) => {
@@ -224,7 +232,7 @@ function Provider({ children }) {
     <Ctx.Provider value={{
       user, authReady, route, setRoute, plans,
       tenants, services, appointments, clients, leads,
-      login, logout, signup, checkSlug,
+      login, loginGoogle, logout, signup, checkSlug,
       updateTenant, updateLanding, activateTenant, suspendTenant,
       addService, removeService, addClient, addAppointment, addLead,
       reloadData,
@@ -528,56 +536,164 @@ function FAQItem({ q, a }) {
 
 function HomePage() {
   const { setRoute, plans } = useApp();
+  const [menu, setMenu] = useState(false);
+  const IMG = {
+    hero: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=1100&q=80",
+    dash: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1100&q=80",
+    site: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1100&q=80",
+    money: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1100&q=80",
+  };
   return (
     <div className="bg-white min-h-screen">
+      {/* HEADER */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-black">M</div>
-            <div><div className="font-black text-slate-900 leading-tight">Marido de Aluguel</div><div className="text-[10px] text-slate-500 leading-tight">Plataforma SaaS</div></div>
+            <div><div className="font-black text-slate-900 leading-tight">Marido de Aluguel</div><div className="text-[10px] text-slate-500 leading-tight">Plataforma para profissionais</div></div>
           </div>
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
-            <a href="#recursos">Recursos</a><a href="#precos">Preços</a><a href="#faq">FAQ</a>
+            <a href="#como" className="hover:text-orange-600">Como funciona</a>
+            <a href="#recursos" className="hover:text-orange-600">Recursos</a>
+            <a href="#precos" className="hover:text-orange-600">Preços</a>
+            <a href="#faq" className="hover:text-orange-600">FAQ</a>
           </nav>
           <div className="flex items-center gap-2">
             <button onClick={() => setRoute("login")} className="hidden sm:inline text-sm font-semibold text-slate-700 px-3 py-2">Entrar</button>
-            <button onClick={() => setRoute("signup")} className="text-sm px-4 py-2 rounded-xl bg-orange-600 text-white font-bold hover:bg-orange-700 shadow-lg">Teste 15 dias grátis</button>
+            <button onClick={() => setRoute("signup")} className="text-sm px-4 py-2.5 rounded-xl bg-orange-600 text-white font-bold hover:bg-orange-700 shadow-lg shadow-orange-600/20">Teste grátis</button>
+            <button className="md:hidden p-2 text-slate-700" onClick={() => setMenu(!menu)}>{menu ? <X/> : <Menu/>}</button>
           </div>
         </div>
+        {menu && (
+          <div className="md:hidden border-t bg-white px-4 py-3 flex flex-col gap-3 text-sm font-medium">
+            <a href="#como" onClick={() => setMenu(false)}>Como funciona</a>
+            <a href="#recursos" onClick={() => setMenu(false)}>Recursos</a>
+            <a href="#precos" onClick={() => setMenu(false)}>Preços</a>
+            <a href="#faq" onClick={() => setMenu(false)}>FAQ</a>
+            <button onClick={() => { setMenu(false); setRoute("login"); }} className="text-left text-orange-600 font-bold">Entrar</button>
+          </div>
+        )}
       </header>
 
+      {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <Badge variant="orange">🔧 Para profissionais de reparos</Badge>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05] text-slate-900 mt-6">
-              Sua agenda <span className="text-orange-600">lotada</span> de serviços, <span className="text-orange-600">todo dia</span>.
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 md:py-24 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+          <div className="text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-orange-200 text-xs font-bold text-orange-700 shadow-sm">
+              🔥 +2.300 profissionais já lotam a agenda com a gente
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.03] text-slate-900 mt-6">
+              Tenha seu <span className="text-orange-600">próprio site</span> e deixe ele <span className="text-orange-600">vender por você</span> — 24h por dia.
             </h1>
-            <p className="mt-6 text-lg text-slate-600 max-w-xl">Site profissional, agendamento online, WhatsApp, chatbot e CRM — tudo conectado.</p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <button onClick={() => setRoute("signup")} className="px-6 py-4 rounded-xl bg-orange-600 text-white font-bold shadow-xl hover:bg-orange-700 transition flex items-center justify-center gap-2">Começar grátis 15 dias <ArrowRight size={18}/></button>
+            <p className="mt-6 text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
+              Enquanto você trabalha, seu site capta clientes, agenda serviços, responde no WhatsApp e organiza seu financeiro. <b className="text-slate-900">Você só aparece para fazer o serviço e receber.</b>
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <button onClick={() => setRoute("signup")} className="px-7 py-4 rounded-xl bg-orange-600 text-white font-bold shadow-xl shadow-orange-600/30 hover:bg-orange-700 hover:-translate-y-0.5 transition flex items-center justify-center gap-2">Criar meu site grátis (15 dias) <ArrowRight size={18}/></button>
+              <a href="#como" className="px-7 py-4 rounded-xl bg-white border-2 border-slate-900 font-bold hover:bg-slate-900 hover:text-white transition flex items-center justify-center gap-2"><Play size={16}/> Como funciona</a>
+            </div>
+            <div className="mt-7 flex items-center gap-5 justify-center lg:justify-start text-sm text-slate-600">
+              <div className="flex items-center gap-1.5"><Check size={16} className="text-green-600"/> Sem cartão</div>
+              <div className="flex items-center gap-1.5"><Check size={16} className="text-green-600"/> Pronto em minutos</div>
+              <div className="flex items-center gap-1.5"><Check size={16} className="text-green-600"/> Cancele quando quiser</div>
             </div>
           </div>
           <div className="relative">
-            <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800" alt="" className="w-full rounded-3xl shadow-2xl"/>
+            <img src={IMG.hero} alt="Profissional de reparos" className="w-full h-[320px] sm:h-[420px] object-cover rounded-3xl shadow-2xl"/>
+            <div className="absolute -bottom-5 -left-3 sm:-left-5 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-green-100 text-green-600 flex items-center justify-center"><Calendar size={20}/></div>
+              <div><div className="text-xs text-slate-500">Novo agendamento</div><div className="font-bold text-sm">+1 serviço hoje 🎉</div></div>
+            </div>
+            <div className="absolute -top-4 -right-2 sm:-right-4 bg-white rounded-2xl shadow-xl p-4 hidden sm:flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center"><DollarSign size={20}/></div>
+              <div><div className="text-xs text-slate-500">Faturamento/mês</div><div className="font-bold text-sm">R$ 12.480</div></div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="recursos" className="py-20 px-4 sm:px-6">
+      {/* STATS */}
+      <section className="bg-slate-900 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {[{n:"2.347+",l:"Profissionais"},{n:"127 mil",l:"Serviços agendados"},{n:"98%",l:"Recomendam"},{n:"7 min",l:"Para montar"}].map((s,i) => (
+            <div key={i}><div className="text-3xl sm:text-4xl font-black text-orange-500">{s.n}</div><div className="text-sm text-slate-400 mt-1">{s.l}</div></div>
+          ))}
+        </div>
+      </section>
+
+      {/* COMO FUNCIONA / showcase site trabalhando */}
+      <section id="como" className="py-16 sm:py-24 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div className="order-2 lg:order-1 relative">
+            <img src={IMG.dash} alt="Painel de gestão" className="w-full h-[300px] sm:h-[400px] object-cover rounded-3xl shadow-2xl"/>
+          </div>
+          <div className="order-1 lg:order-2">
+            <Badge variant="orange">⚙️ No automático</Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 text-slate-900 leading-tight">Deixe o site trabalhar <span className="text-orange-600">enquanto você trabalha</span>.</h2>
+            <p className="mt-5 text-lg text-slate-600">O cliente entra no seu site, vê seus serviços, pede orçamento e agenda — tudo sozinho. Você recebe o lead no celular e só confirma.</p>
+            <div className="mt-7 space-y-4">
+              {[
+                {i:Globe, t:"Sua própria página profissional", d:"Com seu nome, seus serviços, seus preços e seu link para divulgar."},
+                {i:Calendar, t:"Sua agenda online 24h", d:"Clientes marcam horário sozinhos, sem te ligar. Acabou a bagunça."},
+                {i:MessageSquare, t:"Novos clientes caindo direto", d:"Formulário e WhatsApp captam e organizam cada novo cliente no seu CRM."},
+                {i:DollarSign, t:"Gestão financeira na palma da mão", d:"Veja quanto entrou, o que está a receber e o faturamento do mês."},
+              ].map((f,idx) => (
+                <div key={idx} className="flex gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"><f.i size={20}/></div>
+                  <div><div className="font-bold text-slate-900">{f.t}</div><div className="text-sm text-slate-600 mt-0.5">{f.d}</div></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DOR -> SOLUÇÃO */}
+      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-slate-50">
+        <div className="max-w-5xl mx-auto text-center mb-12">
+          <Badge variant="orange">😮‍💨 Reconhece isso?</Badge>
+          <h2 className="text-3xl sm:text-4xl font-black mt-4 text-slate-900">Perder cliente porque não respondeu a tempo dói no bolso.</h2>
+        </div>
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-2xl p-6 border border-red-100">
+            <div className="font-bold text-red-600 mb-3">❌ Sem a plataforma</div>
+            <ul className="space-y-2.5 text-sm text-slate-600">
+              <li>• Cliente manda mensagem e você só vê horas depois</li>
+              <li>• Agenda anotada em papel, esquece horário</li>
+              <li>• Sem site, parece amador e perde para o concorrente</li>
+              <li>• Não sabe quanto faturou no mês</li>
+            </ul>
+          </div>
+          <div className="bg-white rounded-2xl p-6 border-2 border-orange-300 shadow-lg">
+            <div className="font-bold text-orange-600 mb-3">✅ Com o Marido de Aluguel</div>
+            <ul className="space-y-2.5 text-sm text-slate-700">
+              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Lead chega organizado no seu CRM na hora</li>
+              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Agenda online que o cliente preenche sozinho</li>
+              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Site profissional que passa confiança</li>
+              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Painel financeiro mostrando seus ganhos</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* RECURSOS */}
+      <section id="recursos" className="py-16 sm:py-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
             <Badge variant="orange">✨ Tudo em uma plataforma</Badge>
             <h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Recursos que <span className="text-orange-600">vendem por você</span></h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              {icon: Globe, t: "Site profissional", d: "Landing page com seu link."},
-              {icon: Calendar, t: "Agenda online", d: "Clientes agendam sozinhos."},
-              {icon: Bot, t: "Chatbot", d: "Atende enquanto você trabalha."},
-              {icon: CreditCard, t: "Pagamento", d: "PIX, boleto, cartão via Asaas."},
-              {icon: Users, t: "CRM completo", d: "Histórico e tags."},
-              {icon: MessageSquare, t: "WhatsApp", d: "Contato direto com clientes."},
+              {icon: Globe, t: "Site profissional", d: "Página linda com seu link, pronta para divulgar no WhatsApp e Instagram."},
+              {icon: Calendar, t: "Agenda online 24h", d: "Clientes agendam sozinhos. Você só confirma e aparece para fazer."},
+              {icon: MessageSquare, t: "WhatsApp integrado", d: "Botão direto e leads que caem organizados no seu painel."},
+              {icon: Users, t: "CRM completo", d: "Cada cliente com histórico, telefone e tags. Nunca mais perca um contato."},
+              {icon: DollarSign, t: "Gestão financeira", d: "Faturamento, valores a receber e relatórios — tudo em um lugar."},
+              {icon: CreditCard, t: "Pagamento online", d: "PIX, boleto e cartão. Receba sem complicação."},
+              {icon: Bot, t: "Atendimento automático", d: "Responde dúvidas comuns e capta o cliente mesmo de madrugada."},
+              {icon: Mail, t: "Régua de e-mail", d: "Mensagens automáticas que reativam clientes e trazem mais serviços."},
+              {icon: Shield, t: "Dados seguros", d: "Seu negócio na nuvem, com backup. Nunca perde nada."},
             ].map((f,i) => (
               <div key={i} className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-orange-300 hover:shadow-xl transition">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center mb-4"><f.icon size={22}/></div>
@@ -589,11 +705,26 @@ function HomePage() {
         </div>
       </section>
 
-      <section id="precos" className="py-20 px-4 sm:px-6 bg-slate-50">
+      {/* FINANCEIRO showcase */}
+      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <Badge variant="orange">💰 Seu dinheiro organizado</Badge>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 leading-tight">Saiba exatamente <span className="text-orange-400">quanto você fatura</span>.</h2>
+            <p className="mt-5 text-lg text-slate-300">Chega de não saber se o mês foi bom. Veja serviços fechados, valores a receber e a evolução do seu faturamento — direto no celular.</p>
+            <button onClick={() => setRoute("signup")} className="mt-7 px-7 py-4 rounded-xl bg-orange-600 text-white font-bold shadow-xl hover:bg-orange-700 transition inline-flex items-center gap-2">Quero organizar meu negócio <ArrowRight size={18}/></button>
+          </div>
+          <img src={IMG.money} alt="Gestão financeira" className="w-full h-[300px] object-cover rounded-3xl shadow-2xl"/>
+        </div>
+      </section>
+
+      {/* PREÇOS */}
+      <section id="precos" className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <Badge variant="orange">💰 Preços transparentes</Badge>
-            <h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Um plano pra cada <span className="text-orange-600">momento</span></h2>
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
+            <Badge variant="orange">💸 Preços transparentes</Badge>
+            <h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Investimento que <span className="text-orange-600">se paga no 1º serviço</span></h2>
+            <p className="text-slate-600 mt-3">15 dias grátis. Sem cartão. Cancele quando quiser.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {plans.map(p => (
@@ -609,20 +740,55 @@ function HomePage() {
         </div>
       </section>
 
-      <section id="faq" className="py-20 px-4 sm:px-6">
+      {/* DEPOIMENTOS */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12"><Badge variant="orange">⭐ Quem usa, recomenda</Badge><h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Profissionais que mudaram de patamar</h2></div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {n:"Carlos Silva", c:"Eletricista • SP", t:"Em 2 meses minha agenda lotou. O site trabalha sozinho captando cliente enquanto eu faço serviço."},
+              {n:"Eduardo Alves", c:"Encanador • RJ", t:"Parei de perder cliente por demora. Agora chega tudo organizado e eu só confirmo o horário."},
+              {n:"Patrícia Lima", c:"Pintora • MG", t:"Finalmente sei quanto faturo. E ter um site profissional me deu uma credibilidade que não tinha."},
+            ].map((d,i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div className="flex gap-0.5 text-amber-400 mb-3">{[...Array(5)].map((_,j) => <Star key={j} size={14} className="fill-current"/>)}</div>
+                <p className="text-slate-700 leading-relaxed italic">"{d.t}"</p>
+                <div className="mt-5 flex items-center gap-3 pt-5 border-t"><div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">{d.n.charAt(0)}</div><div><div className="font-semibold text-sm">{d.n}</div><div className="text-xs text-slate-500">{d.c}</div></div></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-16 sm:py-20 px-4 sm:px-6 bg-slate-50">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-14"><Badge variant="blue">❓ FAQ</Badge><h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Dúvidas frequentes</h2></div>
+          <div className="text-center mb-12"><Badge variant="blue">❓ FAQ</Badge><h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Dúvidas frequentes</h2></div>
           <div className="space-y-3">
             {[
-              {q:"Preciso saber mexer com tecnologia?", a:"Não! Se usa WhatsApp, usa a plataforma."},
-              {q:"Como funciona o teste de 15 dias?", a:"Cria a conta e usa tudo. Só paga se quiser continuar."},
-              {q:"Posso cancelar quando quiser?", a:"Sim, direto no painel."},
+              {q:"Preciso saber mexer com tecnologia?", a:"Não! Se você usa WhatsApp, consegue usar a plataforma. É tudo simples e em português."},
+              {q:"Quanto tempo leva para ter meu site no ar?", a:"Minutos. Você se cadastra, preenche seus dados e seu site já fica pronto com um link para divulgar."},
+              {q:"Como funciona o teste de 15 dias?", a:"Você cria a conta e usa tudo de graça por 15 dias, sem cartão. Só paga se quiser continuar."},
+              {q:"O site funciona no celular?", a:"Sim! Seu site e seu painel funcionam perfeitamente no celular, tablet e computador."},
+              {q:"Posso cancelar quando quiser?", a:"Sim, direto no painel, sem multa e sem burocracia."},
             ].map((f,i) => <FAQItem key={i} q={f.q} a={f.a}/>)}
           </div>
         </div>
       </section>
 
-      <footer className="bg-slate-900 text-slate-400 py-10 px-4 text-center text-xs">© 2026 Marido de Aluguel SaaS • {BASE_URL}</footer>
+      {/* CTA FINAL */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-orange-600 to-amber-500 text-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight">Comece hoje. Em 15 dias você não vai querer mais viver sem.</h2>
+          <p className="mt-4 text-lg text-orange-50">Seu site, sua agenda e seu financeiro trabalhando por você — 24h por dia.</p>
+          <button onClick={() => setRoute("signup")} className="mt-8 px-8 py-4 rounded-xl bg-white text-orange-600 font-black text-lg hover:scale-105 transition shadow-2xl">Criar minha conta grátis →</button>
+        </div>
+      </section>
+
+      <footer className="bg-slate-950 text-slate-400 py-10 px-4 text-center text-xs">
+        <div className="font-bold text-white mb-1">Marido de Aluguel</div>
+        © 2026 Marido de Aluguel SaaS • {BASE_URL}
+      </footer>
     </div>
   );
 }
@@ -630,8 +796,17 @@ function HomePage() {
 /* ═══════════════════════════════════════════════════════════════
    LOGIN / SIGNUP
    ═══════════════════════════════════════════════════════════════ */
+function GoogleButton({ onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-slate-300 bg-white font-semibold text-slate-700 hover:bg-slate-50 transition">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.6 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.2 5.2C39.9 36.1 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>
+      Continuar com Google
+    </button>
+  );
+}
+
 function LoginPage() {
-  const { login, setRoute } = useApp();
+  const { login, loginGoogle, setRoute } = useApp();
   const [email, setEmail] = useState(""); const [pwd, setPwd] = useState(""); const [busy, setBusy] = useState(false);
   const submit = async (e) => { e.preventDefault(); setBusy(true); await login(email, pwd); setBusy(false); };
   return (
@@ -644,7 +819,9 @@ function LoginPage() {
             <div><div className="font-black text-lg">Marido de Aluguel</div><div className="text-xs text-slate-500">SaaS</div></div>
           </div>
           <h1 className="text-2xl font-black">Entrar</h1>
-          <form onSubmit={submit} className="mt-6 space-y-4">
+          <div className="mt-6"><GoogleButton onClick={loginGoogle}/></div>
+          <div className="flex items-center gap-3 my-5"><div className="flex-1 h-px bg-slate-200"/><span className="text-xs text-slate-400">ou com e-mail</span><div className="flex-1 h-px bg-slate-200"/></div>
+          <form onSubmit={submit} className="space-y-4">
             <Input label="E-mail" type="email" required value={email} onChange={e => setEmail(e.target.value)}/>
             <Input label="Senha" type="password" required value={pwd} onChange={e => setPwd(e.target.value)}/>
             <Btn type="submit" className="w-full" disabled={busy}>{busy ? "Entrando..." : "Entrar no painel"}</Btn>
