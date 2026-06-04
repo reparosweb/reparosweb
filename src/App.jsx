@@ -290,28 +290,28 @@ const Loading = () => (
 function SellerHeader({ tenant }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-slate-200">
+    <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg" style={{background: tenant.brand_color}}>{tenant.company_name.charAt(0)}</div>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg" style={{background: tenant.brand_color}}>{tenant.company_name.charAt(0)}</div>
           <div>
-            <div className="font-black text-slate-900 leading-tight">{tenant.company_name}</div>
-            <div className="text-[11px] text-slate-500 leading-tight">{tenant.city} • ★ {tenant.metrics?.rating ?? "novo"}</div>
+            <div className="font-black text-white leading-tight">{tenant.company_name}</div>
+            <div className="text-[11px] text-slate-400 leading-tight">{tenant.city} • ★ {tenant.metrics?.rating ?? "novo"}</div>
           </div>
         </div>
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
-          <a href="#servicos" className="hover:text-slate-950">Serviços</a>
-          <a href="#como-funciona" className="hover:text-slate-950">Como funciona</a>
-          <a href="#depoimentos" className="hover:text-slate-950">Depoimentos</a>
-          <a href="#orcamento" className="hover:text-slate-950">Orçamento</a>
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+          <a href="#servicos" className="hover:text-white">Serviços</a>
+          <a href="#como-funciona" className="hover:text-white">Como funciona</a>
+          <a href="#depoimentos" className="hover:text-white">Depoimentos</a>
+          <a href="#orcamento" className="hover:text-white">Orçamento</a>
         </nav>
         <div className="flex items-center gap-2">
-          <a href={`https://wa.me/${tenant.landing.whatsapp}`} className="hidden sm:inline text-sm px-4 py-2 rounded-xl text-white font-semibold shadow-sm" style={{background: tenant.brand_color}}>Pedir orçamento</a>
-          <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</button>
+          <a href={`https://wa.me/${tenant.landing.whatsapp}`} className="hidden sm:inline text-sm px-4 py-2 rounded-xl text-white font-semibold shadow-lg" style={{background: tenant.brand_color}}>Pedir orçamento</a>
+          <button className="md:hidden p-2 text-white" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</button>
         </div>
       </div>
       {menuOpen && (
-        <div className="md:hidden border-t bg-white px-4 py-3 flex flex-col gap-3 text-sm">
+        <div className="md:hidden border-t border-white/10 bg-slate-950 px-4 py-3 flex flex-col gap-3 text-sm text-slate-200">
           <a href="#servicos" onClick={() => setMenuOpen(false)}>Serviços</a>
           <a href="#como-funciona" onClick={() => setMenuOpen(false)}>Como funciona</a>
           <a href="#depoimentos" onClick={() => setMenuOpen(false)}>Depoimentos</a>
@@ -325,27 +325,28 @@ function SellerHeader({ tenant }) {
 function SellerHero({ tenant }) {
   const words = (tenant.landing.hero_title || "").split(" ");
   return (
-    <section className="pt-16 pb-20 px-4 sm:px-6 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10" style={{background:`radial-gradient(1200px 600px at 10% -10%, ${tenant.brand_color}22, transparent), radial-gradient(900px 500px at 100% 10%, #FFB00022, transparent)`}}/>
+    <section className="pt-16 pb-24 px-4 sm:px-6 relative overflow-hidden">
+      <div className="absolute inset-0 -z-10" style={{background:`radial-gradient(1000px 500px at 15% -10%, ${tenant.brand_color}30, transparent), radial-gradient(900px 500px at 100% 0%, ${tenant.brand_color}18, transparent)`}}/>
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur border border-white/15 text-xs font-semibold text-slate-200 mb-5">
             <span className="w-2 h-2 rounded-full animate-pulse" style={{background: tenant.brand_color}}/> Atendendo agora em {tenant.city}
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05] text-slate-900">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05] text-white">
             {words.slice(0,-3).join(" ")} <span style={{color: tenant.brand_color}}>{words.slice(-3).join(" ")}</span>
           </h1>
-          <p className="mt-5 text-lg text-slate-600 max-w-xl">{tenant.landing.hero_subtitle}</p>
+          <p className="mt-5 text-lg text-slate-300 max-w-xl">{tenant.landing.hero_subtitle}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#orcamento" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-white font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition" style={{background: tenant.brand_color}}>{tenant.landing.cta_text} <ArrowRight size={16}/></a>
-            <a href={`https://wa.me/${tenant.landing.whatsapp}`} className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border-2 border-slate-900 font-bold hover:bg-slate-900 hover:text-white transition"><MessageSquare size={16}/> WhatsApp</a>
+            <a href="#orcamento" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-white font-bold shadow-lg hover:-translate-y-0.5 transition" style={{background: tenant.brand_color}}>{tenant.landing.cta_text} <ArrowRight size={16}/></a>
+            <a href={`https://wa.me/${tenant.landing.whatsapp}`} className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/5 backdrop-blur border border-white/20 text-white font-bold hover:bg-white/10 transition"><MessageSquare size={16}/> WhatsApp</a>
           </div>
         </div>
         <div className="relative">
-          <img src={tenant.landing.hero_image} alt="" className="w-full rounded-3xl shadow-2xl"/>
-          <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3 max-w-[260px]">
-            <div className="w-11 h-11 rounded-xl bg-green-100 text-green-600 flex items-center justify-center"><CheckCircle size={20}/></div>
-            <div><div className="text-xs text-slate-500">Agendamento</div><div className="font-bold text-sm">Confirmado! 🎉</div></div>
+          <div className="absolute -inset-3 blur-2xl rounded-3xl" style={{background:`${tenant.brand_color}25`}}/>
+          <img src={tenant.landing.hero_image} alt="" className="relative w-full h-[380px] object-cover rounded-3xl border border-white/10 shadow-2xl"/>
+          <div className="absolute -bottom-6 -left-4 sm:-left-6 bg-slate-900/90 backdrop-blur border border-white/10 rounded-2xl shadow-xl p-4 flex items-center gap-3 max-w-[260px]">
+            <div className="w-11 h-11 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center"><CheckCircle size={20}/></div>
+            <div><div className="text-xs text-slate-400">Agendamento</div><div className="font-bold text-sm text-white">Confirmado! 🎉</div></div>
           </div>
         </div>
       </div>
@@ -359,12 +360,12 @@ function SellerServices({ tenant }) {
     <section id="servicos" className="py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="text-xs font-bold tracking-widest uppercase" style={{color: tenant.brand_color}}>Nossos serviços</div>
-          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-slate-900">Tudo o que sua casa precisa</h2>
+          <div className="text-xs font-bold tracking-[0.2em] uppercase" style={{color: tenant.brand_color}}>Nossos serviços</div>
+          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-white">Tudo o que sua casa precisa</h2>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((s,i) => (
-            <div key={s.id || i} className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition">
+            <div key={s.id || i} className="group bg-white/5 backdrop-blur border border-white/10 rounded-2xl overflow-hidden hover:border-white/25 hover:-translate-y-1 transition">
               <div className="relative h-44 overflow-hidden">
                 <img
                   src={s.image || serviceImage(s.name)}
@@ -379,7 +380,7 @@ function SellerServices({ tenant }) {
               </div>
               <div className="p-5 flex items-end justify-between">
                 <div>
-                  <p className="text-xs text-slate-500">A partir de</p>
+                  <p className="text-xs text-slate-400">A partir de</p>
                   <div className="text-2xl font-black" style={{color: tenant.brand_color}}>{brl(s.price)}</div>
                 </div>
                 <a href="#orcamento" className="text-sm font-bold px-3 py-2 rounded-lg text-white shadow" style={{background: tenant.brand_color}}>Orçar</a>
@@ -400,19 +401,19 @@ function SellerHowItWorks({ tenant }) {
     { n: "04", t: "Problema resolvido", d: "Pagamento após o serviço." },
   ];
   return (
-    <section id="como-funciona" className="py-20 px-4 sm:px-6 bg-slate-50">
+    <section id="como-funciona" className="py-20 px-4 sm:px-6 bg-slate-900/40">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="text-xs font-bold tracking-widest uppercase" style={{color: tenant.brand_color}}>Como funciona</div>
-          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-slate-900">Simples, rápido e sem dor de cabeça</h2>
+          <div className="text-xs font-bold tracking-[0.2em] uppercase" style={{color: tenant.brand_color}}>Como funciona</div>
+          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-white">Simples, rápido e sem dor de cabeça</h2>
         </div>
         <div className="grid md:grid-cols-4 gap-6">
           {steps.map((step,i) => (
             <div key={i} className="relative">
-              <div className="text-6xl font-black" style={{color:`${tenant.brand_color}20`}}>{step.n}</div>
-              <div className="font-bold text-lg text-slate-900 mt-1">{step.t}</div>
-              <div className="text-sm text-slate-600 mt-1">{step.d}</div>
-              {i < 3 && <ChevronRight className="hidden md:block absolute top-8 -right-3 text-slate-300" size={24}/>}
+              <div className="text-6xl font-black" style={{color:`${tenant.brand_color}55`}}>{step.n}</div>
+              <div className="font-bold text-lg text-white mt-1">{step.t}</div>
+              <div className="text-sm text-slate-400 mt-1">{step.d}</div>
+              {i < 3 && <ChevronRight className="hidden md:block absolute top-8 -right-3 text-slate-600" size={24}/>}
             </div>
           ))}
         </div>
@@ -462,31 +463,31 @@ function SellerQuoteForm({ tenant }) {
     <section id="orcamento" className="py-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto grid lg:grid-cols-5 gap-10 items-center">
         <div className="lg:col-span-2">
-          <div className="text-xs font-bold tracking-widest uppercase" style={{color: tenant.brand_color}}>Orçamento grátis</div>
-          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-slate-900">Resposta rápida no WhatsApp</h2>
-          <p className="text-slate-600 mt-3">Preencha e vamos te chamar com o preço fechado.</p>
+          <div className="text-xs font-bold tracking-[0.2em] uppercase" style={{color: tenant.brand_color}}>Orçamento grátis</div>
+          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-white">Resposta rápida no WhatsApp</h2>
+          <p className="text-slate-400 mt-3">Preencha e vamos te chamar com o preço fechado.</p>
         </div>
-        <form onSubmit={submit} className="lg:col-span-3 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200">
+        <form onSubmit={submit} className="lg:col-span-3 bg-white/5 backdrop-blur rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/10">
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Nome completo *</label>
-              <input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-slate-900 outline-none"/>
+              <label className="text-xs font-semibold text-slate-300">Nome completo *</label>
+              <input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="mt-1 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white placeholder-slate-500 focus:border-white/40 outline-none"/>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">WhatsApp *</label>
-              <input required value={form.phone} onChange={e => setForm({...form, phone: maskPhone(e.target.value)})} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-slate-900 outline-none" placeholder="(11) 99999-9999"/>
+              <label className="text-xs font-semibold text-slate-300">WhatsApp *</label>
+              <input required value={form.phone} onChange={e => setForm({...form, phone: maskPhone(e.target.value)})} className="mt-1 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white placeholder-slate-500 focus:border-white/40 outline-none" placeholder="(11) 99999-9999"/>
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs font-semibold text-slate-700">Tipo de serviço *</label>
-              <select required value={form.service} onChange={e => setForm({...form, service: e.target.value})} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-slate-900 outline-none bg-white">
+              <label className="text-xs font-semibold text-slate-300">Tipo de serviço *</label>
+              <select required value={form.service} onChange={e => setForm({...form, service: e.target.value})} className="mt-1 w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/15 text-white focus:border-white/40 outline-none">
                 <option value="">Selecione...</option>
                 {(tenant.landing.services || []).map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                 <option>Outro</option>
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs font-semibold text-slate-700">Descreva o problema *</label>
-              <textarea required value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-slate-900 outline-none" placeholder="Ex: torneira pingando..."/>
+              <label className="text-xs font-semibold text-slate-300">Descreva o problema *</label>
+              <textarea required value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} className="mt-1 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white placeholder-slate-500 focus:border-white/40 outline-none" placeholder="Ex: torneira pingando..."/>
             </div>
           </div>
           <button type="submit" className="mt-5 w-full py-4 rounded-xl text-white font-bold shadow-lg flex items-center justify-center gap-2" style={{background: tenant.brand_color}}>
@@ -537,7 +538,7 @@ function SellerWhatsAppFloat({ tenant }) {
 function SellerPublicPage({ tenant }) {
   useEffect(() => { fireConfetti(); }, [tenant.id]);
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-950 text-white">
       <SellerHeader tenant={tenant}/>
       <SellerHero tenant={tenant}/>
       <SellerServices tenant={tenant}/>
