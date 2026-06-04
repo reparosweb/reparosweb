@@ -556,12 +556,12 @@ function SellerPublicPage({ tenant }) {
 function FAQItem({ q, a }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+    <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl overflow-hidden">
       <button onClick={() => setOpen(!open)} className="w-full p-5 flex items-center justify-between text-left">
-        <span className="font-bold text-slate-900">{q}</span>
-        <ChevronRight className={cls("transition", open && "rotate-90")} size={20}/>
+        <span className="font-bold text-white">{q}</span>
+        <ChevronRight className={cls("transition text-[#F5B301]", open && "rotate-90")} size={20}/>
       </button>
-      {open && <div className="px-5 pb-5 text-slate-600 text-sm border-t pt-4">{a}</div>}
+      {open && <div className="px-5 pb-5 text-slate-400 text-sm border-t border-white/10 pt-4">{a}</div>}
     </div>
   );
 }
@@ -572,103 +572,100 @@ function HomePage() {
   const IMG = {
     hero: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=1100&q=80",
     dash: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1100&q=80",
-    site: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1100&q=80",
     money: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1100&q=80",
   };
+  const Eyebrow = ({ children }) => <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-[#F5B301]">{children}</span>;
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-slate-950 text-white min-h-screen selection:bg-[#F5B301] selection:text-slate-900">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-slate-200">
+      <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-black">M</div>
-            <div><div className="font-black text-slate-900 leading-tight">Marido de Aluguel</div><div className="text-[10px] text-slate-500 leading-tight">Plataforma para profissionais</div></div>
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 bg-gradient-to-br from-[#F5B301] to-orange-500 rounded-xl flex items-center justify-center text-slate-900 font-black shadow-lg shadow-[#F5B301]/20">M</div>
+            <div><div className="font-black leading-tight">Marido de Aluguel</div><div className="text-[10px] text-slate-400 leading-tight tracking-wide">PLATAFORMA PREMIUM</div></div>
           </div>
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
-            <a href="#como" className="hover:text-orange-600">Como funciona</a>
-            <a href="#recursos" className="hover:text-orange-600">Recursos</a>
-            <a href="#precos" className="hover:text-orange-600">Preços</a>
-            <a href="#faq" className="hover:text-orange-600">FAQ</a>
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+            <a href="#como" className="hover:text-[#F5B301] transition">Como funciona</a>
+            <a href="#recursos" className="hover:text-[#F5B301] transition">Recursos</a>
+            <a href="#precos" className="hover:text-[#F5B301] transition">Preços</a>
+            <a href="#faq" className="hover:text-[#F5B301] transition">FAQ</a>
           </nav>
           <div className="flex items-center gap-2">
-            <button onClick={() => setRoute("login")} className="hidden sm:inline text-sm font-semibold text-slate-700 px-3 py-2">Entrar</button>
-            <button onClick={() => setRoute("signup")} className="text-sm px-4 py-2.5 rounded-xl bg-orange-600 text-white font-bold hover:bg-orange-700 shadow-lg shadow-orange-600/20">Teste grátis</button>
-            <button className="md:hidden p-2 text-slate-700" onClick={() => setMenu(!menu)}>{menu ? <X/> : <Menu/>}</button>
+            <button onClick={() => setRoute("login")} className="hidden sm:inline text-sm font-semibold text-slate-200 px-3 py-2 hover:text-white">Entrar</button>
+            <button onClick={() => setRoute("signup")} className="text-sm px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900 font-bold hover:shadow-lg hover:shadow-[#F5B301]/30 transition">Teste grátis</button>
+            <button className="md:hidden p-2 text-slate-200" onClick={() => setMenu(!menu)}>{menu ? <X/> : <Menu/>}</button>
           </div>
         </div>
         {menu && (
-          <div className="md:hidden border-t bg-white px-4 py-3 flex flex-col gap-3 text-sm font-medium">
+          <div className="md:hidden border-t border-white/10 bg-slate-950 px-4 py-3 flex flex-col gap-3 text-sm font-medium text-slate-200">
             <a href="#como" onClick={() => setMenu(false)}>Como funciona</a>
             <a href="#recursos" onClick={() => setMenu(false)}>Recursos</a>
             <a href="#precos" onClick={() => setMenu(false)}>Preços</a>
             <a href="#faq" onClick={() => setMenu(false)}>FAQ</a>
-            <button onClick={() => { setMenu(false); setRoute("login"); }} className="text-left text-orange-600 font-bold">Entrar</button>
+            <button onClick={() => { setMenu(false); setRoute("login"); }} className="text-left text-[#F5B301] font-bold">Entrar</button>
           </div>
         )}
       </header>
 
       {/* HERO com vídeo de fundo */}
-      <section className="relative overflow-hidden min-h-[88vh] flex items-center">
-        <video
-          autoPlay muted loop playsInline preload="auto"
-          poster={IMG.hero}
-          className="absolute inset-0 w-full h-full object-cover"
-        >
+      <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+        <video autoPlay muted loop playsInline preload="auto" poster={IMG.hero} className="absolute inset-0 w-full h-full object-cover">
           <source src="/hero-bg.mp4" type="video/mp4" />
         </video>
-        {/* overlay para legibilidade */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-slate-950/85"/>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-20 text-center text-white">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-xs font-bold text-orange-300">
-            🔥 +2.300 profissionais já lotam a agenda com a gente
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950"/>
+        <div className="absolute inset-0" style={{background:"radial-gradient(800px 400px at 50% 0%, rgba(245,179,1,0.12), transparent)"}}/>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 backdrop-blur border border-[#F5B301]/30 text-xs font-bold text-[#F5B301]">
+            ★ A plataforma premium para profissionais de reparos
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight leading-[1.03] mt-6">
-            Tenha seu <span className="text-orange-500">próprio site</span><br className="hidden sm:block"/> e deixe ele <span className="text-orange-500">vender por você</span>.
+            Tenha seu <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5B301] to-orange-500">próprio site</span><br className="hidden sm:block"/> e deixe ele vender por você.
           </h1>
-          <p className="mt-6 text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto">
+          <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto">
             Enquanto você trabalha, seu site capta clientes, agenda serviços, responde no WhatsApp e organiza seu financeiro — <b className="text-white">24 horas por dia</b>.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
-            <button onClick={() => setRoute("signup")} className="px-8 py-4 rounded-xl bg-orange-600 text-white font-bold text-lg shadow-2xl shadow-orange-600/40 hover:bg-orange-700 hover:-translate-y-0.5 transition flex items-center justify-center gap-2">Criar meu site grátis <ArrowRight size={20}/></button>
-            <a href="#como" className="px-8 py-4 rounded-xl bg-white/10 backdrop-blur border-2 border-white/30 text-white font-bold hover:bg-white hover:text-slate-900 transition flex items-center justify-center gap-2"><Play size={18}/> Como funciona</a>
+            <button onClick={() => setRoute("signup")} className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900 font-bold text-lg shadow-2xl shadow-[#F5B301]/30 hover:-translate-y-0.5 transition flex items-center justify-center gap-2">Criar meu site grátis <ArrowRight size={20}/></button>
+            <a href="#como" className="px-8 py-4 rounded-xl bg-white/5 backdrop-blur border border-white/20 text-white font-bold hover:bg-white/10 transition flex items-center justify-center gap-2"><Play size={18}/> Como funciona</a>
           </div>
-          <div className="mt-8 flex flex-wrap items-center gap-5 justify-center text-sm text-slate-200">
-            <div className="flex items-center gap-1.5"><Check size={16} className="text-green-400"/> 15 dias grátis</div>
-            <div className="flex items-center gap-1.5"><Check size={16} className="text-green-400"/> Sem cartão</div>
-            <div className="flex items-center gap-1.5"><Check size={16} className="text-green-400"/> Pronto em minutos</div>
+          <div className="mt-8 flex flex-wrap items-center gap-5 justify-center text-sm text-slate-300">
+            <div className="flex items-center gap-1.5"><Check size={16} className="text-[#F5B301]"/> 15 dias grátis</div>
+            <div className="flex items-center gap-1.5"><Check size={16} className="text-[#F5B301]"/> Sem cartão</div>
+            <div className="flex items-center gap-1.5"><Check size={16} className="text-[#F5B301]"/> Pronto em minutos</div>
           </div>
         </div>
       </section>
 
       {/* STATS */}
-      <section className="bg-slate-900 text-white py-8">
+      <section className="border-y border-white/10 py-10">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[{n:"2.347+",l:"Profissionais"},{n:"127 mil",l:"Serviços agendados"},{n:"98%",l:"Recomendam"},{n:"7 min",l:"Para montar"}].map((s,i) => (
-            <div key={i}><div className="text-3xl sm:text-4xl font-black text-orange-500">{s.n}</div><div className="text-sm text-slate-400 mt-1">{s.l}</div></div>
+            <div key={i}><div className="text-3xl sm:text-4xl font-black text-[#F5B301]">{s.n}</div><div className="text-sm text-slate-400 mt-1">{s.l}</div></div>
           ))}
         </div>
       </section>
 
-      {/* COMO FUNCIONA / showcase site trabalhando */}
-      <section id="como" className="py-16 sm:py-24 px-4 sm:px-6">
+      {/* COMO FUNCIONA */}
+      <section id="como" className="py-16 sm:py-28 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1 relative">
-            <img src={IMG.dash} alt="Painel de gestão" className="w-full h-[300px] sm:h-[400px] object-cover rounded-3xl shadow-2xl"/>
+            <div className="absolute -inset-3 bg-gradient-to-tr from-[#F5B301]/20 to-orange-500/10 blur-2xl rounded-3xl"/>
+            <img src={IMG.dash} alt="Painel de gestão" className="relative w-full h-[300px] sm:h-[420px] object-cover rounded-3xl border border-white/10 shadow-2xl"/>
           </div>
           <div className="order-1 lg:order-2">
-            <Badge variant="orange">⚙️ No automático</Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 text-slate-900 leading-tight">Deixe o site trabalhar <span className="text-orange-600">enquanto você trabalha</span>.</h2>
-            <p className="mt-5 text-lg text-slate-600">O cliente entra no seu site, vê seus serviços, pede orçamento e agenda — tudo sozinho. Você recebe o lead no celular e só confirma.</p>
-            <div className="mt-7 space-y-4">
+            <Eyebrow>No automático</Eyebrow>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-3 leading-tight">Deixe o site trabalhar <span className="text-[#F5B301]">enquanto você trabalha</span>.</h2>
+            <p className="mt-5 text-lg text-slate-400">O cliente entra no seu site, vê seus serviços, pede orçamento e agenda — tudo sozinho. Você recebe o lead no celular e só confirma.</p>
+            <div className="mt-8 space-y-4">
               {[
                 {i:Globe, t:"Sua própria página profissional", d:"Com seu nome, seus serviços, seus preços e seu link para divulgar."},
                 {i:Calendar, t:"Sua agenda online 24h", d:"Clientes marcam horário sozinhos, sem te ligar. Acabou a bagunça."},
-                {i:MessageSquare, t:"Novos clientes caindo direto", d:"Formulário e WhatsApp captam e organizam cada novo cliente no seu CRM."},
+                {i:MessageSquare, t:"Novos clientes caindo direto", d:"Formulário e WhatsApp captam e organizam cada cliente no seu CRM."},
                 {i:DollarSign, t:"Gestão financeira na palma da mão", d:"Veja quanto entrou, o que está a receber e o faturamento do mês."},
               ].map((f,idx) => (
                 <div key={idx} className="flex gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"><f.i size={20}/></div>
-                  <div><div className="font-bold text-slate-900">{f.t}</div><div className="text-sm text-slate-600 mt-0.5">{f.d}</div></div>
+                  <div className="w-11 h-11 rounded-xl bg-[#F5B301]/15 text-[#F5B301] flex items-center justify-center shrink-0 border border-[#F5B301]/20"><f.i size={20}/></div>
+                  <div><div className="font-bold text-white">{f.t}</div><div className="text-sm text-slate-400 mt-0.5">{f.d}</div></div>
                 </div>
               ))}
             </div>
@@ -677,56 +674,56 @@ function HomePage() {
       </section>
 
       {/* DOR -> SOLUÇÃO */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-slate-50">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-900/40">
         <div className="max-w-5xl mx-auto text-center mb-12">
-          <Badge variant="orange">😮‍💨 Reconhece isso?</Badge>
-          <h2 className="text-3xl sm:text-4xl font-black mt-4 text-slate-900">Perder cliente porque não respondeu a tempo dói no bolso.</h2>
+          <Eyebrow>Reconhece isso?</Eyebrow>
+          <h2 className="text-3xl sm:text-4xl font-black mt-3">Perder cliente por demora <span className="text-[#F5B301]">dói no bolso</span>.</h2>
         </div>
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl p-6 border border-red-100">
-            <div className="font-bold text-red-600 mb-3">❌ Sem a plataforma</div>
-            <ul className="space-y-2.5 text-sm text-slate-600">
+          <div className="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10">
+            <div className="font-bold text-red-400 mb-3">❌ Sem a plataforma</div>
+            <ul className="space-y-2.5 text-sm text-slate-400">
               <li>• Cliente manda mensagem e você só vê horas depois</li>
               <li>• Agenda anotada em papel, esquece horário</li>
               <li>• Sem site, parece amador e perde para o concorrente</li>
               <li>• Não sabe quanto faturou no mês</li>
             </ul>
           </div>
-          <div className="bg-white rounded-2xl p-6 border-2 border-orange-300 shadow-lg">
-            <div className="font-bold text-orange-600 mb-3">✅ Com o Marido de Aluguel</div>
-            <ul className="space-y-2.5 text-sm text-slate-700">
-              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Lead chega organizado no seu CRM na hora</li>
-              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Agenda online que o cliente preenche sozinho</li>
-              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Site profissional que passa confiança</li>
-              <li className="flex gap-2"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/> Painel financeiro mostrando seus ganhos</li>
+          <div className="bg-gradient-to-br from-[#F5B301]/10 to-transparent backdrop-blur rounded-2xl p-6 border border-[#F5B301]/30 shadow-xl shadow-[#F5B301]/5">
+            <div className="font-bold text-[#F5B301] mb-3">✅ Com o Marido de Aluguel</div>
+            <ul className="space-y-2.5 text-sm text-slate-200">
+              <li className="flex gap-2"><Check size={16} className="text-[#F5B301] shrink-0 mt-0.5"/> Lead chega organizado no seu CRM na hora</li>
+              <li className="flex gap-2"><Check size={16} className="text-[#F5B301] shrink-0 mt-0.5"/> Agenda online que o cliente preenche sozinho</li>
+              <li className="flex gap-2"><Check size={16} className="text-[#F5B301] shrink-0 mt-0.5"/> Site profissional que passa confiança</li>
+              <li className="flex gap-2"><Check size={16} className="text-[#F5B301] shrink-0 mt-0.5"/> Painel financeiro mostrando seus ganhos</li>
             </ul>
           </div>
         </div>
       </section>
 
       {/* RECURSOS */}
-      <section id="recursos" className="py-16 sm:py-24 px-4 sm:px-6">
+      <section id="recursos" className="py-16 sm:py-28 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
-            <Badge variant="orange">✨ Tudo em uma plataforma</Badge>
-            <h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Recursos que <span className="text-orange-600">vendem por você</span></h2>
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+            <Eyebrow>Tudo em uma plataforma</Eyebrow>
+            <h2 className="text-3xl md:text-5xl font-black mt-3">Recursos que <span className="text-[#F5B301]">vendem por você</span></h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {icon: Globe, t: "Site profissional", d: "Página linda com seu link, pronta para divulgar no WhatsApp e Instagram."},
               {icon: Calendar, t: "Agenda online 24h", d: "Clientes agendam sozinhos. Você só confirma e aparece para fazer."},
               {icon: MessageSquare, t: "WhatsApp integrado", d: "Botão direto e leads que caem organizados no seu painel."},
-              {icon: Users, t: "CRM completo", d: "Cada cliente com histórico, telefone e tags. Nunca mais perca um contato."},
+              {icon: Users, t: "CRM completo", d: "Cada cliente com histórico, telefone e tags. Nunca perca um contato."},
               {icon: DollarSign, t: "Gestão financeira", d: "Faturamento, valores a receber e relatórios — tudo em um lugar."},
               {icon: CreditCard, t: "Pagamento online", d: "PIX, boleto e cartão. Receba sem complicação."},
               {icon: Bot, t: "Atendimento automático", d: "Responde dúvidas comuns e capta o cliente mesmo de madrugada."},
               {icon: Mail, t: "Régua de e-mail", d: "Mensagens automáticas que reativam clientes e trazem mais serviços."},
               {icon: Shield, t: "Dados seguros", d: "Seu negócio na nuvem, com backup. Nunca perde nada."},
             ].map((f,i) => (
-              <div key={i} className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-orange-300 hover:shadow-xl transition">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center mb-4"><f.icon size={22}/></div>
-                <h3 className="font-bold text-lg">{f.t}</h3>
-                <p className="text-sm text-slate-600 mt-1.5">{f.d}</p>
+              <div key={i} className="group bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10 hover:border-[#F5B301]/40 hover:bg-white/[0.07] transition">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F5B301] to-orange-500 text-slate-900 flex items-center justify-center mb-4 shadow-lg shadow-[#F5B301]/20"><f.icon size={22}/></div>
+                <h3 className="font-bold text-lg text-white">{f.t}</h3>
+                <p className="text-sm text-slate-400 mt-1.5">{f.d}</p>
               </div>
             ))}
           </div>
@@ -734,34 +731,36 @@ function HomePage() {
       </section>
 
       {/* FINANCEIRO showcase */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <Badge variant="orange">💰 Seu dinheiro organizado</Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 leading-tight">Saiba exatamente <span className="text-orange-400">quanto você fatura</span>.</h2>
-            <p className="mt-5 text-lg text-slate-300">Chega de não saber se o mês foi bom. Veja serviços fechados, valores a receber e a evolução do seu faturamento — direto no celular.</p>
-            <button onClick={() => setRoute("signup")} className="mt-7 px-7 py-4 rounded-xl bg-orange-600 text-white font-bold shadow-xl hover:bg-orange-700 transition inline-flex items-center gap-2">Quero organizar meu negócio <ArrowRight size={18}/></button>
+      <section className="py-16 sm:py-24 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 overflow-hidden">
+          <div className="grid lg:grid-cols-2 gap-10 items-center p-8 sm:p-12">
+            <div>
+              <Eyebrow>Seu dinheiro organizado</Eyebrow>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-3 leading-tight">Saiba exatamente <span className="text-[#F5B301]">quanto você fatura</span>.</h2>
+              <p className="mt-5 text-lg text-slate-400">Chega de não saber se o mês foi bom. Veja serviços fechados, valores a receber e a evolução do faturamento — direto no celular.</p>
+              <button onClick={() => setRoute("signup")} className="mt-7 px-7 py-4 rounded-xl bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900 font-bold shadow-xl shadow-[#F5B301]/20 transition inline-flex items-center gap-2">Quero organizar meu negócio <ArrowRight size={18}/></button>
+            </div>
+            <img src={IMG.money} alt="Gestão financeira" className="w-full h-[300px] object-cover rounded-2xl border border-white/10 shadow-2xl"/>
           </div>
-          <img src={IMG.money} alt="Gestão financeira" className="w-full h-[300px] object-cover rounded-3xl shadow-2xl"/>
         </div>
       </section>
 
       {/* PREÇOS */}
-      <section id="precos" className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50">
+      <section id="precos" className="py-16 sm:py-28 px-4 sm:px-6 bg-slate-900/40">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
-            <Badge variant="orange">💸 Preços transparentes</Badge>
-            <h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Investimento que <span className="text-orange-600">se paga no 1º serviço</span></h2>
-            <p className="text-slate-600 mt-3">15 dias grátis. Sem cartão. Cancele quando quiser.</p>
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+            <Eyebrow>Preços transparentes</Eyebrow>
+            <h2 className="text-3xl md:text-5xl font-black mt-3">Investimento que <span className="text-[#F5B301]">se paga no 1º serviço</span></h2>
+            <p className="text-slate-400 mt-3">15 dias grátis. Sem cartão. Cancele quando quiser.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {plans.map(p => (
-              <div key={p.id} className={cls("relative bg-white rounded-3xl p-7 border-2 transition", p.highlight?"border-orange-500 shadow-2xl md:scale-105":"border-slate-200")}>
-                {p.badge && <div className={cls("absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-white text-xs font-black", p.highlight?"bg-orange-500":"bg-slate-900")}>{p.badge}</div>}
-                <div className="font-bold text-xl">{p.name}</div>
-                <div className="mt-4 flex items-baseline gap-1"><span className="text-5xl font-black">R${p.price}</span><span className="text-slate-500">/mês</span></div>
-                <ul className="mt-6 space-y-2.5">{(p.features||[]).map((f,i) => <li key={i} className="flex items-start gap-2 text-sm"><Check size={16} className="text-green-600 shrink-0 mt-0.5"/>{f}</li>)}</ul>
-                <button onClick={() => setRoute("signup")} className={cls("mt-7 w-full py-3 rounded-xl font-bold transition", p.highlight?"bg-orange-600 text-white shadow-lg":"bg-slate-900 text-white")}>Começar grátis</button>
+              <div key={p.id} className={cls("relative rounded-3xl p-7 border transition backdrop-blur", p.highlight ? "border-[#F5B301]/50 bg-gradient-to-b from-[#F5B301]/10 to-white/[0.03] shadow-2xl shadow-[#F5B301]/10 md:scale-105" : "border-white/10 bg-white/5")}>
+                {p.badge && <div className={cls("absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-black", p.highlight ? "bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900" : "bg-white/10 text-white")}>{p.badge}</div>}
+                <div className="font-bold text-xl text-white">{p.name}</div>
+                <div className="mt-4 flex items-baseline gap-1"><span className="text-5xl font-black text-white">R${p.price}</span><span className="text-slate-400">/mês</span></div>
+                <ul className="mt-6 space-y-2.5">{(p.features||[]).map((f,i) => <li key={i} className="flex items-start gap-2 text-sm text-slate-300"><Check size={16} className="text-[#F5B301] shrink-0 mt-0.5"/>{f}</li>)}</ul>
+                <button onClick={() => setRoute("signup")} className={cls("mt-7 w-full py-3 rounded-xl font-bold transition", p.highlight ? "bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900 shadow-lg" : "bg-white/10 text-white hover:bg-white/20")}>Começar grátis</button>
               </div>
             ))}
           </div>
@@ -769,19 +768,19 @@ function HomePage() {
       </section>
 
       {/* DEPOIMENTOS */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6">
+      <section className="py-16 sm:py-28 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12"><Badge variant="orange">⭐ Quem usa, recomenda</Badge><h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Profissionais que mudaram de patamar</h2></div>
+          <div className="text-center max-w-2xl mx-auto mb-12"><Eyebrow>Quem usa, recomenda</Eyebrow><h2 className="text-3xl md:text-5xl font-black mt-3">Profissionais que mudaram de patamar</h2></div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {n:"Carlos Silva", c:"Eletricista • SP", t:"Em 2 meses minha agenda lotou. O site trabalha sozinho captando cliente enquanto eu faço serviço."},
               {n:"Eduardo Alves", c:"Encanador • RJ", t:"Parei de perder cliente por demora. Agora chega tudo organizado e eu só confirmo o horário."},
               {n:"Patrícia Lima", c:"Pintora • MG", t:"Finalmente sei quanto faturo. E ter um site profissional me deu uma credibilidade que não tinha."},
             ].map((d,i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div className="flex gap-0.5 text-amber-400 mb-3">{[...Array(5)].map((_,j) => <Star key={j} size={14} className="fill-current"/>)}</div>
-                <p className="text-slate-700 leading-relaxed italic">"{d.t}"</p>
-                <div className="mt-5 flex items-center gap-3 pt-5 border-t"><div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">{d.n.charAt(0)}</div><div><div className="font-semibold text-sm">{d.n}</div><div className="text-xs text-slate-500">{d.c}</div></div></div>
+              <div key={i} className="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10">
+                <div className="flex gap-0.5 text-[#F5B301] mb-3">{[...Array(5)].map((_,j) => <Star key={j} size={14} className="fill-current"/>)}</div>
+                <p className="text-slate-200 leading-relaxed italic">"{d.t}"</p>
+                <div className="mt-5 flex items-center gap-3 pt-5 border-t border-white/10"><div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#F5B301] to-orange-500 flex items-center justify-center text-slate-900 font-bold">{d.n.charAt(0)}</div><div><div className="font-semibold text-sm text-white">{d.n}</div><div className="text-xs text-slate-400">{d.c}</div></div></div>
               </div>
             ))}
           </div>
@@ -789,9 +788,9 @@ function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-16 sm:py-20 px-4 sm:px-6 bg-slate-50">
+      <section id="faq" className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-900/40">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12"><Badge variant="blue">❓ FAQ</Badge><h2 className="text-3xl md:text-5xl font-black mt-4 text-slate-900">Dúvidas frequentes</h2></div>
+          <div className="text-center mb-12"><Eyebrow>FAQ</Eyebrow><h2 className="text-3xl md:text-5xl font-black mt-3">Dúvidas frequentes</h2></div>
           <div className="space-y-3">
             {[
               {q:"Preciso saber mexer com tecnologia?", a:"Não! Se você usa WhatsApp, consegue usar a plataforma. É tudo simples e em português."},
@@ -805,16 +804,16 @@ function HomePage() {
       </section>
 
       {/* CTA FINAL */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-orange-600 to-amber-500 text-white">
-        <div className="max-w-3xl mx-auto text-center">
+      <section className="py-16 sm:py-28 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-[#F5B301] to-orange-500 text-slate-900 text-center p-10 sm:p-16 shadow-2xl shadow-[#F5B301]/20">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight">Comece hoje. Em 15 dias você não vai querer mais viver sem.</h2>
-          <p className="mt-4 text-lg text-orange-50">Seu site, sua agenda e seu financeiro trabalhando por você — 24h por dia.</p>
-          <button onClick={() => setRoute("signup")} className="mt-8 px-8 py-4 rounded-xl bg-white text-orange-600 font-black text-lg hover:scale-105 transition shadow-2xl">Criar minha conta grátis →</button>
+          <p className="mt-4 text-lg text-slate-800">Seu site, sua agenda e seu financeiro trabalhando por você — 24h por dia.</p>
+          <button onClick={() => setRoute("signup")} className="mt-8 px-8 py-4 rounded-xl bg-slate-900 text-white font-black text-lg hover:scale-105 transition shadow-2xl">Criar minha conta grátis →</button>
         </div>
       </section>
 
-      <footer className="bg-slate-950 text-slate-400 py-10 px-4 text-center text-xs">
-        <div className="font-bold text-white mb-1">Marido de Aluguel</div>
+      <footer className="border-t border-white/10 text-slate-400 py-10 px-4 text-center text-xs">
+        <div className="font-black text-white mb-1">Marido de Aluguel</div>
         © 2026 Marido de Aluguel SaaS • {BASE_URL}
       </footer>
     </div>
