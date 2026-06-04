@@ -989,7 +989,7 @@ function AdminDashboard() {
     {id:"leads", l:"Leads", i: Target},
   ];
   return (
-    <div className="min-h-screen bg-slate-100 flex">
+    <div className="min-h-screen bg-slate-950 flex">
       <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 text-white transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
         <div className="p-5 border-b border-slate-800 flex items-center gap-2">
           <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-black">M</div>
@@ -1003,7 +1003,7 @@ function AdminDashboard() {
         </nav>
       </aside>
       <main className="flex-1 min-w-0">
-        <header className="bg-white border-b h-14 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="bg-slate-900/80 backdrop-blur border-b border-white/10 text-white h-14 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3"><button className="md:hidden" onClick={() => setMobileOpen(true)}><Menu/></button><h1 className="font-black capitalize">{navItems.find(n => n.id === tab)?.l}</h1></div>
           <Badge variant="success">🟢 Online</Badge>
         </header>
@@ -1111,20 +1111,20 @@ function SellerDashboard() {
     {id:"settings",l:"Config",i:Settings},
   ];
   return (
-    <div className="min-h-screen bg-slate-100 flex">
-      <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
-        <div className="p-5 border-b flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black" style={{background: tenant.brand_color}}>{tenant.company_name.charAt(0)}</div>
-          <div className="min-w-0"><div className="font-black truncate">{tenant.company_name}</div><div className="text-[10px] text-slate-500 truncate">Plano {plans.find(p => p.id === tenant.plan_id)?.name || tenant.plan_id}</div></div>
+    <div className="min-h-screen bg-slate-950 flex">
+      <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 border-r border-white/10 transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
+        <div className="p-5 border-b border-white/10 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black shadow-lg" style={{background: tenant.brand_color}}>{tenant.company_name.charAt(0)}</div>
+          <div className="min-w-0"><div className="font-black truncate text-white">{tenant.company_name}</div><div className="text-[10px] text-slate-400 truncate">Plano {plans.find(p => p.id === tenant.plan_id)?.name || tenant.plan_id}</div></div>
         </div>
         <nav className="p-3 space-y-1">
-          {nav.map(n => <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-slate-900 text-white":"text-slate-600 hover:bg-slate-100")}><n.i size={18}/>{n.l}</button>)}
-          <a href={publicUrl(tenant.slug)} target="_blank" rel="noreferrer" className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-orange-600 hover:bg-orange-50 mt-2"><Eye size={16}/> Ver minha página</a>
-          <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-600 hover:bg-red-50"><LogOut size={16}/> Sair</button>
+          {nav.map(n => <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900":"text-slate-300 hover:bg-white/5")}><n.i size={18}/>{n.l}</button>)}
+          <a href={publicUrl(tenant.slug)} target="_blank" rel="noreferrer" className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-[#F5B301] hover:bg-white/5 mt-2"><Eye size={16}/> Ver minha página</a>
+          <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-white/5"><LogOut size={16}/> Sair</button>
         </nav>
       </aside>
       <main className="flex-1 min-w-0">
-        <header className="bg-white border-b h-14 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="bg-slate-900/80 backdrop-blur border-b border-white/10 text-white h-14 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3"><button className="md:hidden" onClick={() => setMobileOpen(true)}><Menu/></button><h1 className="font-black capitalize">{nav.find(n => n.id === tab)?.l}</h1></div>
           <Badge variant="success">✅ {tenant.status}</Badge>
         </header>
