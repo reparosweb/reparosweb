@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Misc scratch
+_extracted_*
+_parse_export.mjs
+_inspect*.mjs
+_extract.mjs
+chat-export-*.json
+reparos web.jsx
+App.jsx.bak
