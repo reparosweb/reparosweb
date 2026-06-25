@@ -27,3 +27,9 @@ _extract.mjs
 chat-export-*.json
 reparos web.jsx
 App.jsx.bak
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+.vercel

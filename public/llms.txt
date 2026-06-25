@@ -1,0 +1,20 @@
+# Marido de Aluguel (ReparosWeb)
+
+> Plataforma SaaS que dá a profissionais de reparos e manutenção (eletricistas, encanadores,
+> pintores, montadores, chaveiros, etc.) um site próprio, agenda online, CRM, gestão financeira
+> e automações de WhatsApp/e-mail. Multi-tenant: cada profissional tem sua página pública em /{slug}.
+
+## O que oferecemos
+- Site profissional indexável por profissional (ex: /carlos, /joao)
+- Agenda online com horários configuráveis (30/45/60 min)
+- CRM em Kanban: lead → visita → peças → finalização
+- Gestão financeira e relatórios
+- Pagamento via Asaas (cartão e PIX recorrentes)
+- Blog com conteúdo de reparos e manutenção
+
+## Planos
+- Essencial R$19,90/mês · Profissional R$29,90/mês · Completo R$49,90/mês
+
+## Links
+- Site: https://reparosweb.vercel.app
+- Cadastro/painel: https://reparosweb.vercel.app/app
