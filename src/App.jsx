@@ -585,6 +585,33 @@ function SellerWhatsAppFloat({ tenant }) {
   );
 }
 
+function SellerGallery({ tenant }) {
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    supabase.from("media_items").select("*").eq("tenant_id", tenant.id).order("created_at", { ascending: false })
+      .then(({ data }) => setItems(data || []));
+  }, [tenant.id]);
+  if (!items.length) return null;
+  return (
+    <section className="py-20 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="text-xs font-bold tracking-[0.2em] uppercase" style={{color: tenant.brand_color}}>Nossos trabalhos</div>
+          <h2 className="text-3xl sm:text-4xl font-black mt-2 text-white">Veja serviços que já realizamos</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {items.map(it => (
+            <div key={it.id} className="relative rounded-2xl overflow-hidden border border-white/10 group">
+              <img src={it.url} alt={it.title || ""} loading="lazy" onError={(e)=>{e.currentTarget.src=FALLBACK_IMG;}} className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition duration-500"/>
+              {it.title && <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-sm font-semibold text-white">{it.title}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SellerPublicPage({ tenant }) {
   useEffect(() => { fireConfetti(); }, [tenant.id]);
   return (
@@ -592,6 +619,7 @@ function SellerPublicPage({ tenant }) {
       <SellerHeader tenant={tenant}/>
       <SellerHero tenant={tenant}/>
       <SellerServices tenant={tenant}/>
+      <SellerGallery tenant={tenant}/>
       <SellerHowItWorks tenant={tenant}/>
       <SellerTestimonials tenant={tenant}/>
       <SellerQuoteForm tenant={tenant}/>
