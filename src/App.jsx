@@ -916,9 +916,9 @@ function LoginPage() {
   const [email, setEmail] = useState(""); const [pwd, setPwd] = useState(""); const [busy, setBusy] = useState(false);
   const submit = async (e) => { e.preventDefault(); setBusy(true); await login(email, pwd); setBusy(false); };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4" style={{backgroundImage:"radial-gradient(700px 350px at 50% 0%, rgba(245,179,1,0.12), transparent)"}}>
       <div className="w-full max-w-md">
-        <button onClick={() => setRoute("home")} className="text-sm text-slate-600 mb-4">← Voltar</button>
+        <button onClick={() => setRoute("home")} className="text-sm text-slate-300 hover:text-white mb-4">← Voltar</button>
         <Card className="p-8 border-t-4 border-t-orange-600 shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-11 h-11 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-black">M</div>
@@ -1002,9 +1002,9 @@ function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-50 py-10 px-4">
+    <div className="min-h-screen bg-slate-950 py-10 px-4" style={{backgroundImage:"radial-gradient(700px 350px at 50% 0%, rgba(245,179,1,0.10), transparent)"}}>
       <div className="max-w-2xl mx-auto">
-        <button onClick={() => setRoute("home")} className="text-sm text-slate-600 mb-4">← Voltar</button>
+        <button onClick={() => setRoute("home")} className="text-sm text-slate-300 hover:text-white mb-4">← Voltar</button>
         <Card className="p-6 md:p-8 border-t-4 border-t-orange-600">
           <h1 className="text-2xl font-black">Crie sua conta grátis</h1>
           <p className="text-slate-500 mt-1">15 dias sem cartão.</p>
