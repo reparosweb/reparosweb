@@ -142,6 +142,7 @@ function Provider({ children }) {
   const [profile, setProfile] = useState(null);
   const [authReady, setAuthReady] = useState(false);
   const [route, setRoute] = useState("home");
+  const [adminView, setAdminView] = useState("admin"); // 'admin' | 'seller' (p/ super_admin alternar)
   const [plans, setPlans] = useState(PLANS_FALLBACK);
   const [tenants, setTenants] = useState([]);
   const [services, setServices] = useState([]);
@@ -185,13 +186,15 @@ function Provider({ children }) {
 
   async function reloadData(p = profile) {
     if (!p) return;
-    if (p.role === "super_admin") {
-      const [{ data: t }, { data: l }] = await Promise.all([
+    const isAdmin = p.role === "super_admin";
+    if (isAdmin) {
+      const [{ data: allT }, { data: allL }] = await Promise.all([
         supabase.from("tenants").select("*").order("created_at", { ascending: false }),
         supabase.from("leads").select("*").order("created_at", { ascending: false }),
       ]);
-      setTenants(t || []); setLeads(l || []);
-    } else if (p.tenant_id) {
+      setTenants(allT || []); setLeads(allL || []);
+    }
+    if (p.tenant_id) {
       const tid = p.tenant_id;
       const q = (tbl, ord, asc = true) => { let r = supabase.from(tbl).select("*").eq("tenant_id", tid); return ord ? r.order(ord, { ascending: asc }) : r; };
       const [t, s, a, c, l, tm, ts, md, ev, dl] = await Promise.all([
@@ -202,9 +205,11 @@ function Provider({ children }) {
         q("media_items", "created_at", false), q("events", "event_date"),
         q("deals", "created_at", false),
       ]);
-      setTenants(t.data || []); setServices(s.data || []); setAppointments(a.data || []);
-      setClients(c.data || []); setLeads(l.data || []); setTeam(tm.data || []);
-      setTestimonials(ts.data || []); setMedia(md.data || []); setEvents(ev.data || []); setDeals(dl.data || []);
+      if (!isAdmin) { setTenants(t.data || []); setLeads(l.data || []); }
+      else if (t.data?.length && !(tenants || []).some(x => x.id === tid)) setTenants(prev => [...(prev||[]), ...t.data]);
+      setServices(s.data || []); setAppointments(a.data || []); setClients(c.data || []);
+      setTeam(tm.data || []); setTestimonials(ts.data || []); setMedia(md.data || []);
+      setEvents(ev.data || []); setDeals(dl.data || []);
     }
   }
   useEffect(() => { if (profile) reloadData(profile); /* eslint-disable-next-line */ }, [profile?.id, profile?.role, profile?.tenant_id]);
@@ -293,6 +298,7 @@ function Provider({ children }) {
   return (
     <Ctx.Provider value={{
       user, authReady, route, setRoute, plans,
+      adminView, setAdminView,
       tenants, services, appointments, clients, leads,
       team, testimonials, media, events, deals,
       login, loginGoogle, logout, signup, checkSlug,
@@ -1059,7 +1065,7 @@ function SignupPage() {
    ADMIN DASHBOARD
    ═══════════════════════════════════════════════════════════════ */
 function AdminDashboard() {
-  const { tenants, leads, plans, activateTenant, suspendTenant, logout } = useApp();
+  const { user, tenants, leads, plans, activateTenant, suspendTenant, logout, setAdminView } = useApp();
   const [tab, setTab] = useState("overview");
   const [mobileOpen, setMobileOpen] = useState(false);
   const planPrice = id => plans.find(p => p.id === id)?.price || 0;
@@ -1086,7 +1092,8 @@ function AdminDashboard() {
           {navItems.map(n => (
             <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-orange-600 text-white":"text-slate-400 hover:bg-slate-800")}><n.i size={18}/>{n.l}</button>
           ))}
-          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-slate-800 mt-4"><LogOut size={16}/> Sair</button>
+          {user.tenant_id && <button onClick={() => setAdminView("seller")} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#F5B301] hover:bg-slate-800 mt-4"><Briefcase size={16}/> Meu negócio (Profissional)</button>}
+          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-slate-800 mt-1"><LogOut size={16}/> Sair</button>
         </nav>
       </aside>
       <main className="flex-1 min-w-0">
@@ -1182,8 +1189,8 @@ function AdminDashboard() {
    SELLER DASHBOARD
    ═══════════════════════════════════════════════════════════════ */
 function SellerDashboard() {
-  const { tenants, plans, updateTenant, updateLanding, logout, services, appointments, clients } = useApp();
-  const tenant = tenants[0];
+  const { user, tenants, plans, updateTenant, updateLanding, logout, services, appointments, clients, setAdminView } = useApp();
+  const tenant = tenants.find(t => t.id === user.tenant_id) || tenants[0];
   const [tab, setTab] = useState("overview");
   const [mobileOpen, setMobileOpen] = useState(false);
   if (!tenant) return <Loading/>;
@@ -1212,6 +1219,7 @@ function SellerDashboard() {
         <nav className="p-3 space-y-1 overflow-y-auto" style={{maxHeight: "calc(100vh - 84px)"}}>
           {nav.map(n => <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900":"text-slate-300 hover:bg-white/5")}><n.i size={18}/>{n.l}</button>)}
           <a href={publicUrl(tenant.slug)} target="_blank" rel="noreferrer" className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-[#F5B301] hover:bg-white/5 mt-2"><Eye size={16}/> Ver minha página</a>
+          {user.role === "super_admin" && <button onClick={() => setAdminView("admin")} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-blue-400 hover:bg-white/5"><LayoutDashboard size={16}/> Voltar ao Admin</button>}
           <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-white/5"><LogOut size={16}/> Sair</button>
         </nav>
       </aside>
@@ -1584,7 +1592,7 @@ function AIAssistant({ tenant, onUpdate }) {
    ROUTER + APP
    ═══════════════════════════════════════════════════════════════ */
 function Router() {
-  const { user, authReady, route } = useApp();
+  const { user, authReady, route, adminView } = useApp();
   const [publicTenant, setPublicTenant] = useState(undefined);
 
   useEffect(() => {
@@ -1608,7 +1616,10 @@ function Router() {
     if (route === "signup") return <SignupPage/>;
     return <HomePage/>;
   }
-  if (user.role === "super_admin") return <AdminDashboard/>;
+  if (user.role === "super_admin") {
+    if (adminView === "seller" && user.tenant_id) return <SellerDashboard/>;
+    return <AdminDashboard/>;
+  }
   if (user.tenant_id) return <SellerDashboard/>;
   return <SignupPage/>;
 }
