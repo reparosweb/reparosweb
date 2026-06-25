@@ -315,13 +315,13 @@ function Provider({ children }) {
 /* ═══════════════════════════════════════════════════════════════
    UI PRIMITIVES
    ═══════════════════════════════════════════════════════════════ */
-const Card = ({ children, className = "" }) => <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm ${className}`}>{children}</div>;
+const Card = ({ children, className = "" }) => <div className={`bg-white rounded-2xl border border-slate-100 shadow-[0_6px_24px_rgba(99,135,255,0.08)] ${className}`}>{children}</div>;
 const Badge = ({ children, variant = "default" }) => {
   const s = { default:"bg-slate-100 text-slate-700", success:"bg-green-100 text-green-700", warning:"bg-amber-100 text-amber-700", danger:"bg-red-100 text-red-700", blue:"bg-blue-100 text-blue-700", purple:"bg-purple-100 text-purple-700", orange:"bg-orange-100 text-orange-700" };
   return <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${s[variant]}`}>{children}</span>;
 };
 const Btn = ({ children, onClick, variant = "primary", className = "", icon: Icon, disabled, type = "button" }) => {
-  const v = { primary:"bg-orange-600 text-white hover:bg-orange-700 shadow-lg shadow-orange-900/10", secondary:"bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200", danger:"bg-red-50 text-red-600 hover:bg-red-100", success:"bg-green-600 text-white hover:bg-green-700", ghost:"text-slate-600 hover:bg-slate-100", outline:"border-2 border-orange-600 text-orange-600 hover:bg-orange-50", dark:"bg-slate-900 text-white hover:bg-slate-800" };
+  const v = { primary:"bg-[#5D87FF] text-white hover:bg-[#4570EA] shadow-lg shadow-[#5D87FF]/20", secondary:"bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200", danger:"bg-red-50 text-red-600 hover:bg-red-100", success:"bg-[#13DEB9] text-white hover:bg-[#02b3a9]", ghost:"text-slate-600 hover:bg-slate-100", outline:"border-2 border-[#5D87FF] text-[#5D87FF] hover:bg-[#5D87FF]/10", dark:"bg-slate-900 text-white hover:bg-slate-800" };
   return <button type={type} onClick={onClick} disabled={disabled} className={`px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 justify-center text-sm disabled:opacity-50 ${v[variant]} ${className}`}>{Icon && <Icon size={16}/>} {children}</button>;
 };
 const Input = ({ label, error, ...p }) => (
@@ -1083,22 +1083,22 @@ function AdminDashboard() {
     {id:"leads", l:"Leads", i: Target},
   ];
   return (
-    <div className="min-h-screen bg-slate-950 flex">
-      <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 text-white transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
-        <div className="p-5 border-b border-slate-800 flex items-center gap-2">
-          <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-black">M</div>
-          <div><div className="font-black">Admin</div><div className="text-[10px] text-slate-400">Super</div></div>
+    <div className="min-h-screen bg-[#f6f9fc] flex">
+      <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
+        <div className="p-5 border-b border-slate-100 flex items-center gap-2">
+          <div className="w-9 h-9 bg-gradient-to-br from-[#5D87FF] to-[#4570EA] rounded-xl flex items-center justify-center text-white font-black">M</div>
+          <div><div className="font-black text-slate-800">Admin</div><div className="text-[10px] text-slate-400">Super Painel</div></div>
         </div>
         <nav className="p-3 space-y-1 overflow-y-auto" style={{maxHeight: "calc(100vh - 84px)"}}>
           {navItems.map(n => (
-            <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-orange-600 text-white":"text-slate-400 hover:bg-slate-800")}><n.i size={18}/>{n.l}</button>
+            <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-[#5D87FF] text-white shadow-md shadow-[#5D87FF]/30":"text-slate-600 hover:bg-[#5D87FF]/10 hover:text-[#5D87FF]")}><n.i size={18}/>{n.l}</button>
           ))}
-          {user.tenant_id && <button onClick={() => setAdminView("seller")} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#F5B301] hover:bg-slate-800 mt-4"><Briefcase size={16}/> Meu negócio (Profissional)</button>}
-          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-slate-800 mt-1"><LogOut size={16}/> Sair</button>
+          {user.tenant_id && <button onClick={() => setAdminView("seller")} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#5D87FF] hover:bg-[#5D87FF]/10 mt-4 font-semibold"><Briefcase size={16}/> Meu negócio (Profissional)</button>}
+          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 mt-1"><LogOut size={16}/> Sair</button>
         </nav>
       </aside>
       <main className="flex-1 min-w-0">
-        <header className="bg-slate-900/80 backdrop-blur border-b border-white/10 text-white h-14 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="bg-white border-b border-slate-200 text-slate-800 h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3"><button className="md:hidden" onClick={() => setMobileOpen(true)}><Menu/></button><h1 className="font-black capitalize">{navItems.find(n => n.id === tab)?.l}</h1></div>
           <Badge variant="success">🟢 Online</Badge>
         </header>
@@ -1211,21 +1211,21 @@ function SellerDashboard() {
     {id:"settings",l:"Config",i:Settings},
   ];
   return (
-    <div className="min-h-screen bg-slate-950 flex">
-      <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 border-r border-white/10 transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
-        <div className="p-5 border-b border-white/10 flex items-center gap-3">
+    <div className="min-h-screen bg-[#f6f9fc] flex">
+      <aside className={cls("fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform transition-transform md:relative md:translate-x-0", mobileOpen?"translate-x-0":"-translate-x-full")}>
+        <div className="p-5 border-b border-slate-100 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black shadow-lg" style={{background: tenant.brand_color}}>{tenant.company_name.charAt(0)}</div>
-          <div className="min-w-0"><div className="font-black truncate text-white">{tenant.company_name}</div><div className="text-[10px] text-slate-400 truncate">Plano {plans.find(p => p.id === tenant.plan_id)?.name || tenant.plan_id}</div></div>
+          <div className="min-w-0"><div className="font-black truncate text-slate-800">{tenant.company_name}</div><div className="text-[10px] text-slate-400 truncate">Plano {plans.find(p => p.id === tenant.plan_id)?.name || tenant.plan_id}</div></div>
         </div>
         <nav className="p-3 space-y-1 overflow-y-auto" style={{maxHeight: "calc(100vh - 84px)"}}>
-          {nav.map(n => <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900":"text-slate-300 hover:bg-white/5")}><n.i size={18}/>{n.l}</button>)}
-          <a href={publicUrl(tenant.slug)} target="_blank" rel="noreferrer" className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-[#F5B301] hover:bg-white/5 mt-2"><Eye size={16}/> Ver minha página</a>
-          {user.role === "super_admin" && <button onClick={() => setAdminView("admin")} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-blue-400 hover:bg-white/5"><LayoutDashboard size={16}/> Voltar ao Admin</button>}
-          <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-white/5"><LogOut size={16}/> Sair</button>
+          {nav.map(n => <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-[#5D87FF] text-white shadow-md shadow-[#5D87FF]/30":"text-slate-600 hover:bg-[#5D87FF]/10 hover:text-[#5D87FF]")}><n.i size={18}/>{n.l}</button>)}
+          <a href={publicUrl(tenant.slug)} target="_blank" rel="noreferrer" className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-[#5D87FF] hover:bg-[#5D87FF]/10 mt-2 font-semibold"><Eye size={16}/> Ver minha página</a>
+          {user.role === "super_admin" && <button onClick={() => setAdminView("admin")} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100"><LayoutDashboard size={16}/> Voltar ao Admin</button>}
+          <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50"><LogOut size={16}/> Sair</button>
         </nav>
       </aside>
       <main className="flex-1 min-w-0">
-        <header className="bg-slate-900/80 backdrop-blur border-b border-white/10 text-white h-14 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="bg-white border-b border-slate-200 text-slate-800 h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3"><button className="md:hidden" onClick={() => setMobileOpen(true)}><Menu/></button><h1 className="font-black capitalize">{nav.find(n => n.id === tab)?.l}</h1></div>
           <Badge variant="success">✅ {tenant.status}</Badge>
         </header>
