@@ -31,6 +31,34 @@ const SELLER_DEFAULT_SERVICES = [
   { id: "s4", name: "Pintura residencial", price: 45, icon: "🎨", cat: "Pintura" },
 ];
 
+// Profissões de reparos e manutenção (base: categoria "Reformas e Reparos")
+const PROFESSIONS = [
+  { id: "marido-aluguel", label: "Marido de Aluguel", icon: "🛠️", services: [["Pequenos reparos",90,"🛠️"],["Montagem de móveis",120,"🪑"],["Instalação de prateleiras",80,"🔩"],["Troca de fechaduras",100,"🔑"]] },
+  { id: "eletricista", label: "Eletricista", icon: "⚡", services: [["Instalação elétrica",180,"⚡"],["Troca de disjuntor",120,"🔌"],["Instalação de chuveiro",90,"🚿"],["Ponto de tomada",70,"🔌"]] },
+  { id: "encanador", label: "Encanador", icon: "🔧", services: [["Conserto de vazamento",130,"💧"],["Desentupimento",150,"🚿"],["Troca de torneira",80,"🚰"],["Instalação de pia",160,"🪠"]] },
+  { id: "pintor", label: "Pintor", icon: "🎨", services: [["Pintura de parede",45,"🎨"],["Textura",60,"🖌️"],["Pintura externa",70,"🏠"],["Massa corrida",40,"🪣"]] },
+  { id: "montador", label: "Montador de Móveis", icon: "🪑", services: [["Montagem de guarda-roupa",150,"🚪"],["Montagem de cama",90,"🛏️"],["Montagem de estante",110,"📚"],["Desmontagem",80,"🔧"]] },
+  { id: "pedreiro", label: "Pedreiro", icon: "🧱", services: [["Assentamento de piso",65,"🧱"],["Reboco",55,"🪣"],["Pequena alvenaria",90,"🧱"],["Contrapiso",70,"🏗️"]] },
+  { id: "marceneiro", label: "Marceneiro", icon: "🪚", services: [["Móvel planejado",300,"🪚"],["Reparo em madeira",120,"🔨"],["Porta sob medida",250,"🚪"]] },
+  { id: "chaveiro", label: "Chaveiro", icon: "🔑", services: [["Abertura de porta",120,"🔑"],["Cópia de chave",25,"🗝️"],["Troca de segredo",90,"🔐"]] },
+  { id: "ar-condicionado", label: "Técnico de Ar-Condicionado", icon: "❄️", services: [["Instalação de split",350,"❄️"],["Limpeza/higienização",150,"🧼"],["Recarga de gás",250,"🌬️"]] },
+  { id: "jardinagem", label: "Jardinagem", icon: "🌿", services: [["Poda de árvores",120,"🌳"],["Corte de grama",80,"🌱"],["Paisagismo",300,"🪴"]] },
+  { id: "gesseiro", label: "Gesseiro / Drywall", icon: "🏗️", services: [["Forro de gesso",60,"🏗️"],["Parede drywall",90,"🧱"],["Sanca de gesso",110,"✨"]] },
+  { id: "vidraceiro", label: "Vidraceiro", icon: "🪟", services: [["Troca de vidro",150,"🪟"],["Box de banheiro",400,"🚿"],["Espelho sob medida",200,"🪞"]] },
+  { id: "serralheiro", label: "Serralheiro", icon: "🔩", services: [["Portão de ferro",500,"🚪"],["Grade de proteção",350,"🔩"],["Solda",120,"⚙️"]] },
+  { id: "dedetizador", label: "Dedetização", icon: "🐜", services: [["Dedetização geral",180,"🐜"],["Descupinização",250,"🪳"],["Controle de roedores",200,"🐀"]] },
+  { id: "impermeabilizacao", label: "Impermeabilização", icon: "💧", services: [["Impermeabilização de laje",90,"💧"],["Calha",120,"🌧️"]] },
+  { id: "energia-solar", label: "Energia Solar", icon: "☀️", services: [["Instalação de painéis",1200,"☀️"],["Manutenção",300,"🔋"]] },
+  { id: "automacao", label: "Automação Residencial", icon: "📱", services: [["Portão automático",450,"🚪"],["Câmeras",350,"📷"],["Fechadura digital",300,"🔐"]] },
+  { id: "limpeza-pos-obra", label: "Limpeza Pós-Obra", icon: "🧹", services: [["Limpeza pesada",250,"🧹"],["Limpeza de vidros",120,"🪟"]] },
+];
+const professionById = id => PROFESSIONS.find(p => p.id === id);
+const servicesForProfession = id => {
+  const p = professionById(id);
+  if (!p) return SELLER_DEFAULT_SERVICES;
+  return p.services.map((s, i) => ({ id: `s${i+1}`, name: s[0], price: s[1], icon: s[2] }));
+};
+
 /* ═══════════════════════════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════════════════════════ */
@@ -120,6 +148,11 @@ function Provider({ children }) {
   const [appointments, setAppointments] = useState([]);
   const [clients, setClients] = useState([]);
   const [leads, setLeads] = useState([]);
+  const [team, setTeam] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [media, setMedia] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [deals, setDeals] = useState([]);
 
   const user = profile ? {
     id: profile.id, role: profile.role, tenant_id: profile.tenant_id,
@@ -159,14 +192,19 @@ function Provider({ children }) {
       ]);
       setTenants(t || []); setLeads(l || []);
     } else if (p.tenant_id) {
-      const [{ data: t }, { data: s }, { data: a }, { data: c }, { data: l }] = await Promise.all([
-        supabase.from("tenants").select("*").eq("id", p.tenant_id),
-        supabase.from("services").select("*").eq("tenant_id", p.tenant_id).order("created_at"),
-        supabase.from("appointments").select("*").eq("tenant_id", p.tenant_id).order("scheduled_at"),
-        supabase.from("clients").select("*").eq("tenant_id", p.tenant_id).order("created_at", { ascending: false }),
-        supabase.from("leads").select("*").eq("tenant_id", p.tenant_id).order("created_at", { ascending: false }),
+      const tid = p.tenant_id;
+      const q = (tbl, ord, asc = true) => { let r = supabase.from(tbl).select("*").eq("tenant_id", tid); return ord ? r.order(ord, { ascending: asc }) : r; };
+      const [t, s, a, c, l, tm, ts, md, ev, dl] = await Promise.all([
+        supabase.from("tenants").select("*").eq("id", tid),
+        q("services", "created_at"), q("appointments", "scheduled_at"),
+        q("clients", "created_at", false), q("leads", "created_at", false),
+        q("team_members", "created_at"), q("testimonials", "created_at", false),
+        q("media_items", "created_at", false), q("events", "event_date"),
+        q("deals", "created_at", false),
       ]);
-      setTenants(t || []); setServices(s || []); setAppointments(a || []); setClients(c || []); setLeads(l || []);
+      setTenants(t.data || []); setServices(s.data || []); setAppointments(a.data || []);
+      setClients(c.data || []); setLeads(l.data || []); setTeam(tm.data || []);
+      setTestimonials(ts.data || []); setMedia(md.data || []); setEvents(ev.data || []); setDeals(dl.data || []);
     }
   }
   useEffect(() => { if (profile) reloadData(profile); /* eslint-disable-next-line */ }, [profile?.id, profile?.role, profile?.tenant_id]);
@@ -206,12 +244,13 @@ function Provider({ children }) {
         if (e2) return { success: false, error: "Confirme seu e-mail (verifique a caixa de entrada) e tente entrar." };
       }
     }
+    const prof = professionById(form.profession);
     const landing = {
-      hero_title: `${form.company_name} - Serviços Profissionais`,
+      hero_title: `${form.company_name} - ${prof ? prof.label : "Serviços Profissionais"}`,
       hero_subtitle: "Qualidade, confiança e pontualidade em cada atendimento.",
       cta_text: "Quero um orçamento grátis",
       whatsapp: (form.phone || "").replace(/\D/g, ""),
-      services: SELLER_DEFAULT_SERVICES,
+      services: servicesForProfession(form.profession),
       testimonials: [],
       hero_image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800",
       banner_image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200",
@@ -225,8 +264,9 @@ function Provider({ children }) {
     };
     const { data: t, error: e3 } = await supabase.rpc("create_my_tenant", { p: payload });
     if (e3) return { success: false, error: e3.message };
-    const { data: prof } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
-    if (prof) setProfile(prof);
+    if (t?.id && form.profession) await supabase.from("tenants").update({ profession: form.profession }).eq("id", t.id);
+    const { data: profileRow } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
+    if (profileRow) setProfile(profileRow);
     return { success: true, tenant: t };
   };
 
@@ -245,14 +285,20 @@ function Provider({ children }) {
   const addAppointment = async (a) => { await supabase.from("appointments").insert(a); reloadData(); };
   const addLead = async (l) => { await supabase.from("leads").insert(l); reloadData(); };
 
+  // CRUD genérico para os módulos do painel
+  const addRow = async (table, row) => { await supabase.from(table).insert(row); reloadData(); };
+  const delRow = async (table, id) => { await supabase.from(table).delete().eq("id", id); reloadData(); };
+  const updRow = async (table, id, patch) => { await supabase.from(table).update(patch).eq("id", id); reloadData(); };
+
   return (
     <Ctx.Provider value={{
       user, authReady, route, setRoute, plans,
       tenants, services, appointments, clients, leads,
+      team, testimonials, media, events, deals,
       login, loginGoogle, logout, signup, checkSlug,
       updateTenant, updateLanding, activateTenant, suspendTenant,
       addService, removeService, addClient, addAppointment, addLead,
-      reloadData,
+      addRow, delRow, updRow, reloadData,
     }}>
       {children}
     </Ctx.Provider>
@@ -423,8 +469,12 @@ function SellerHowItWorks({ tenant }) {
 }
 
 function SellerTestimonials({ tenant }) {
-  const items = tenant.landing.testimonials || [];
-  if (items.length === 0) return null;
+  const [items, setItems] = useState(tenant.landing.testimonials || []);
+  useEffect(() => {
+    supabase.from("testimonials").select("*").eq("tenant_id", tenant.id).eq("published", true).order("created_at", { ascending: false })
+      .then(({ data }) => { if (data && data.length) setItems(data); });
+  }, [tenant.id]);
+  if (!items || items.length === 0) return null;
   return (
     <section id="depoimentos" className="py-20 px-4 sm:px-6 bg-slate-900 text-white">
       <div className="max-w-7xl mx-auto">
@@ -870,7 +920,7 @@ function SignupPage() {
   const [form, setForm] = useState({
     owner_name:"", company_name:"", email:"", phone:"", cpf:"",
     cep:"", address:"", number:"", complement:"", city:"", state:"",
-    slug:"", plan_id:"pro", password:"",
+    slug:"", plan_id:"pro", password:"", profession:"",
   });
 
   useEffect(() => {
@@ -890,6 +940,7 @@ function SignupPage() {
     const errs = {};
     if (!form.owner_name) errs.owner_name = "Obrigatório";
     if (!form.company_name) errs.company_name = "Obrigatório";
+    if (!form.profession) errs.profession = "Escolha sua profissão";
     if (!form.email) errs.email = "Obrigatório";
     if (form.password.length < 6) errs.password = "Mínimo 6 caracteres";
     if (!form.phone) errs.phone = "Obrigatório";
@@ -933,6 +984,14 @@ function SignupPage() {
             <div className="grid md:grid-cols-2 gap-4">
               <Input label="Nome completo *" value={form.owner_name} onChange={e => setForm({...form, owner_name: e.target.value})} error={errors.owner_name}/>
               <Input label="Empresa *" value={form.company_name} onChange={e => setForm({...form, company_name: e.target.value})} error={errors.company_name}/>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Sua profissão * <span className="text-slate-400 font-normal">(define seus serviços iniciais)</span></label>
+              <select value={form.profession} onChange={e => setForm({...form, profession: e.target.value})} className={`w-full px-3.5 py-2.5 border rounded-xl text-sm bg-white outline-none focus:ring-2 focus:ring-orange-500 ${errors.profession?"border-red-400":"border-slate-200"}`}>
+                <option value="">Selecione...</option>
+                {PROFESSIONS.map(p => <option key={p.id} value={p.id}>{p.icon} {p.label}</option>)}
+              </select>
+              {errors.profession && <p className="text-xs text-red-600 mt-1">{errors.profession}</p>}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <Input label="E-mail *" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} error={errors.email}/>
@@ -995,7 +1054,7 @@ function AdminDashboard() {
           <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-black">M</div>
           <div><div className="font-black">Admin</div><div className="text-[10px] text-slate-400">Super</div></div>
         </div>
-        <nav className="p-3 space-y-1">
+        <nav className="p-3 space-y-1 overflow-y-auto" style={{maxHeight: "calc(100vh - 84px)"}}>
           {navItems.map(n => (
             <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-orange-600 text-white":"text-slate-400 hover:bg-slate-800")}><n.i size={18}/>{n.l}</button>
           ))}
@@ -1108,6 +1167,11 @@ function SellerDashboard() {
     {id:"services",l:"Serviços",i:Briefcase},
     {id:"agenda",l:"Agenda",i:Calendar},
     {id:"crm",l:"Clientes",i:Users},
+    {id:"negocios",l:"Negócios",i:Target},
+    {id:"equipe",l:"Equipe",i:Shield},
+    {id:"depoimentos",l:"Depoimentos",i:Star},
+    {id:"midia",l:"Mídia & Eventos",i:Activity},
+    {id:"ia",l:"Criar com IA",i:Sparkles},
     {id:"settings",l:"Config",i:Settings},
   ];
   return (
@@ -1117,7 +1181,7 @@ function SellerDashboard() {
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black shadow-lg" style={{background: tenant.brand_color}}>{tenant.company_name.charAt(0)}</div>
           <div className="min-w-0"><div className="font-black truncate text-white">{tenant.company_name}</div><div className="text-[10px] text-slate-400 truncate">Plano {plans.find(p => p.id === tenant.plan_id)?.name || tenant.plan_id}</div></div>
         </div>
-        <nav className="p-3 space-y-1">
+        <nav className="p-3 space-y-1 overflow-y-auto" style={{maxHeight: "calc(100vh - 84px)"}}>
           {nav.map(n => <button key={n.id} onClick={() => { setTab(n.id); setMobileOpen(false); }} className={cls("w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition", tab===n.id?"bg-gradient-to-r from-[#F5B301] to-orange-500 text-slate-900":"text-slate-300 hover:bg-white/5")}><n.i size={18}/>{n.l}</button>)}
           <a href={publicUrl(tenant.slug)} target="_blank" rel="noreferrer" className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-[#F5B301] hover:bg-white/5 mt-2"><Eye size={16}/> Ver minha página</a>
           <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-white/5"><LogOut size={16}/> Sair</button>
@@ -1155,6 +1219,11 @@ function SellerDashboard() {
           {tab === "services" && <ServicesManager tenant={tenant}/>}
           {tab === "agenda" && <AgendaManager tenant={tenant}/>}
           {tab === "crm" && <CRMManager tenant={tenant}/>}
+          {tab === "negocios" && <DealsManager tenant={tenant}/>}
+          {tab === "equipe" && <TeamManager tenant={tenant}/>}
+          {tab === "depoimentos" && <TestimonialsManager tenant={tenant}/>}
+          {tab === "midia" && <MediaManager tenant={tenant}/>}
+          {tab === "ia" && <AIAssistant tenant={tenant} onUpdate={updateLanding}/>}
           {tab === "settings" && <SettingsPanel tenant={tenant} onUpdate={updateTenant}/>}
         </div>
       </main>
@@ -1314,6 +1383,170 @@ function SettingsPanel({ tenant, onUpdate }) {
           <div className="text-3xl font-black mt-2">{brl(plans.find(p => p.id === f.plan_id)?.price)}<span className="text-sm text-slate-500 font-normal">/mês</span></div>
         </div>
         <p className="text-xs text-slate-500 mt-3">Pagamento real (Asaas) chega na Fase 2.</p>
+      </Card>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MÓDULOS: Equipe, Depoimentos, Mídia & Eventos, Negócios, IA
+   ═══════════════════════════════════════════════════════════════ */
+function TeamManager({ tenant }) {
+  const { team, addRow, delRow } = useApp();
+  const [f, setF] = useState({ name:"", email:"", phone:"", role:"tecnico" });
+  return (
+    <div className="space-y-4">
+      <Card className="p-6">
+        <h3 className="font-bold mb-4">👥 Adicionar membro da equipe</h3>
+        <div className="grid md:grid-cols-4 gap-3">
+          <Input placeholder="Nome" value={f.name} onChange={e => setF({...f,name:e.target.value})}/>
+          <Input placeholder="E-mail" value={f.email} onChange={e => setF({...f,email:e.target.value})}/>
+          <Input placeholder="Telefone" value={f.phone} onChange={e => setF({...f,phone:maskPhone(e.target.value)})}/>
+          <select value={f.role} onChange={e => setF({...f,role:e.target.value})} className="px-3 py-2.5 border rounded-xl text-sm bg-white"><option value="tecnico">Técnico</option><option value="atendente">Atendente</option><option value="gestor">Gestor</option></select>
+        </div>
+        <Btn className="mt-3" icon={Plus} onClick={async () => { if(f.name){ await addRow("team_members", {...f, tenant_id: tenant.id}); setF({name:"",email:"",phone:"",role:"tecnico"}); } }}>Adicionar</Btn>
+      </Card>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {team.map(m => (
+          <Card key={m.id} className="p-4"><div className="flex justify-between items-start"><div><div className="font-bold">{m.name}</div><div className="text-xs text-slate-500">{m.phone} {m.email?`• ${m.email}`:""}</div><Badge variant={m.role==="gestor"?"purple":m.role==="atendente"?"blue":"default"}>{m.role}</Badge></div><button onClick={() => delRow("team_members", m.id)} className="text-red-400"><Trash2 size={16}/></button></div></Card>
+        ))}
+        {team.length === 0 && <p className="text-sm text-slate-400 col-span-full">Nenhum membro ainda.</p>}
+      </div>
+    </div>
+  );
+}
+
+function TestimonialsManager({ tenant }) {
+  const { testimonials, addRow, delRow } = useApp();
+  const [f, setF] = useState({ name:"", city:"", rating:5, text:"" });
+  return (
+    <div className="space-y-4">
+      <Card className="p-6">
+        <h3 className="font-bold mb-4">⭐ Adicionar depoimento (aparece na sua página)</h3>
+        <div className="grid md:grid-cols-3 gap-3">
+          <Input placeholder="Nome do cliente" value={f.name} onChange={e => setF({...f,name:e.target.value})}/>
+          <Input placeholder="Cidade" value={f.city} onChange={e => setF({...f,city:e.target.value})}/>
+          <select value={f.rating} onChange={e => setF({...f,rating:+e.target.value})} className="px-3 py-2.5 border rounded-xl text-sm bg-white">{[5,4,3,2,1].map(n => <option key={n} value={n}>{n} ★</option>)}</select>
+        </div>
+        <textarea placeholder="Depoimento" value={f.text} onChange={e => setF({...f,text:e.target.value})} rows={2} className="mt-3 w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm outline-none"/>
+        <Btn className="mt-3" icon={Plus} onClick={async () => { if(f.name&&f.text){ await addRow("testimonials", {...f, tenant_id: tenant.id, published:true}); setF({name:"",city:"",rating:5,text:""}); } }}>Adicionar</Btn>
+      </Card>
+      <div className="grid md:grid-cols-2 gap-3">
+        {testimonials.map(t => (
+          <Card key={t.id} className="p-4"><div className="flex justify-between items-start gap-3"><div><div className="flex gap-0.5 text-amber-400 mb-1">{[...Array(t.rating||5)].map((_,j) => <Star key={j} size={12} className="fill-current"/>)}</div><p className="text-sm italic text-slate-700">"{t.text}"</p><div className="text-xs text-slate-500 mt-1">{t.name} • {t.city}</div></div><button onClick={() => delRow("testimonials", t.id)} className="text-red-400"><Trash2 size={16}/></button></div></Card>
+        ))}
+        {testimonials.length === 0 && <p className="text-sm text-slate-400 col-span-full">Nenhum depoimento ainda.</p>}
+      </div>
+    </div>
+  );
+}
+
+function MediaManager({ tenant }) {
+  const { media, events, addRow, delRow } = useApp();
+  const [m, setM] = useState({ type:"photo", url:"", title:"" });
+  const [ev, setEv] = useState({ title:"", description:"", event_date:"", location:"" });
+  return (
+    <div className="space-y-4">
+      <Card className="p-6">
+        <h3 className="font-bold mb-4">📸 Mídia (fotos e vídeos dos seus trabalhos)</h3>
+        <div className="grid md:grid-cols-3 gap-3">
+          <select value={m.type} onChange={e => setM({...m,type:e.target.value})} className="px-3 py-2.5 border rounded-xl text-sm bg-white"><option value="photo">Foto</option><option value="video">Vídeo</option></select>
+          <Input placeholder="URL da mídia" value={m.url} onChange={e => setM({...m,url:e.target.value})}/>
+          <Input placeholder="Título" value={m.title} onChange={e => setM({...m,title:e.target.value})}/>
+        </div>
+        <Btn className="mt-3" icon={Plus} onClick={async () => { if(m.url){ await addRow("media_items", {...m, tenant_id: tenant.id}); setM({type:"photo",url:"",title:""}); } }}>Adicionar mídia</Btn>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+          {media.map(it => (
+            <div key={it.id} className="relative rounded-xl overflow-hidden border group">
+              <img src={it.url} alt={it.title} className="w-full h-28 object-cover" onError={(e)=>{e.currentTarget.src=FALLBACK_IMG;}}/>
+              <button onClick={() => delRow("media_items", it.id)} className="absolute top-1 right-1 bg-white/90 rounded-lg p-1 text-red-500"><Trash2 size={14}/></button>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <Card className="p-6">
+        <h3 className="font-bold mb-4">🎉 Eventos / agenda de visitas técnicas</h3>
+        <div className="grid md:grid-cols-2 gap-3">
+          <Input placeholder="Título" value={ev.title} onChange={e => setEv({...ev,title:e.target.value})}/>
+          <Input type="datetime-local" value={ev.event_date} onChange={e => setEv({...ev,event_date:e.target.value})}/>
+          <Input placeholder="Local" value={ev.location} onChange={e => setEv({...ev,location:e.target.value})}/>
+          <Input placeholder="Descrição" value={ev.description} onChange={e => setEv({...ev,description:e.target.value})}/>
+        </div>
+        <Btn className="mt-3" icon={Plus} onClick={async () => { if(ev.title){ await addRow("events", {...ev, event_date: ev.event_date||null, tenant_id: tenant.id}); setEv({title:"",description:"",event_date:"",location:""}); } }}>Adicionar evento</Btn>
+        <div className="divide-y mt-4">
+          {events.map(e => (<div key={e.id} className="py-3 flex justify-between items-center"><div><div className="font-bold text-sm">{e.title}</div><div className="text-xs text-slate-500">{e.location} {e.event_date?`• ${new Date(e.event_date).toLocaleString("pt-BR")}`:""}</div></div><button onClick={() => delRow("events", e.id)} className="text-red-400"><Trash2 size={16}/></button></div>))}
+          {events.length === 0 && <p className="text-sm text-slate-400 py-2">Nenhum evento.</p>}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function DealsManager({ tenant }) {
+  const { deals, addRow, updRow, delRow } = useApp();
+  const [f, setF] = useState({ title:"", client_name:"", value:"", stage:"novo" });
+  const stages = [["novo","Novo"],["proposta","Proposta"],["ganho","Ganho"],["perdido","Perdido"]];
+  const total = deals.filter(d=>d.stage==="ganho").reduce((a,d)=>a+(d.value_cents||0),0);
+  return (
+    <div className="space-y-4">
+      <Card className="p-6">
+        <div className="flex flex-wrap justify-between items-center gap-2 mb-4"><h3 className="font-bold">💼 Pipeline de negócios</h3><Badge variant="success">Ganho: {centsBrl(total)}</Badge></div>
+        <div className="grid md:grid-cols-4 gap-3">
+          <Input placeholder="Oportunidade" value={f.title} onChange={e => setF({...f,title:e.target.value})}/>
+          <Input placeholder="Cliente" value={f.client_name} onChange={e => setF({...f,client_name:e.target.value})}/>
+          <Input type="number" placeholder="Valor (R$)" value={f.value} onChange={e => setF({...f,value:e.target.value})}/>
+          <select value={f.stage} onChange={e => setF({...f,stage:e.target.value})} className="px-3 py-2.5 border rounded-xl text-sm bg-white">{stages.map(s => <option key={s[0]} value={s[0]}>{s[1]}</option>)}</select>
+        </div>
+        <Btn className="mt-3" icon={Plus} onClick={async () => { if(f.title){ await addRow("deals", { title:f.title, client_name:f.client_name, value_cents: Math.round((+f.value||0)*100), stage:f.stage, tenant_id: tenant.id }); setF({title:"",client_name:"",value:"",stage:"novo"}); } }}>Adicionar</Btn>
+      </Card>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+        {stages.map(s => (
+          <div key={s[0]} className="bg-white rounded-2xl border border-slate-200 p-3">
+            <div className="font-bold text-sm mb-2 px-1">{s[1]} ({deals.filter(d=>d.stage===s[0]).length})</div>
+            <div className="space-y-2">
+              {deals.filter(d=>d.stage===s[0]).map(d => (
+                <div key={d.id} className="bg-slate-50 rounded-xl p-3 text-sm">
+                  <div className="flex justify-between"><span className="font-bold">{d.title}</span><button onClick={() => delRow("deals", d.id)} className="text-red-400"><Trash2 size={13}/></button></div>
+                  <div className="text-xs text-slate-500">{d.client_name} • {centsBrl(d.value_cents)}</div>
+                  <select value={d.stage} onChange={e => updRow("deals", d.id, {stage:e.target.value})} className="mt-2 w-full text-xs border rounded-lg px-2 py-1 bg-white">{stages.map(st => <option key={st[0]} value={st[0]}>{st[1]}</option>)}</select>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AIAssistant({ tenant, onUpdate }) {
+  const prof = professionById(tenant.profession);
+  const profLabel = prof ? prof.label.toLowerCase() : "serviços de reparo";
+  const city = tenant.city || "sua região";
+  const suggestions = {
+    hero_title: `${tenant.company_name} — ${prof ? prof.label : "Reparos e Manutenção"} em ${city}`,
+    hero_subtitle: `Atendimento rápido, preço justo e garantia. Especialista em ${profLabel} pronto para resolver o que você precisa, sem dor de cabeça.`,
+    about: `Com anos de experiência em ${profLabel}, a ${tenant.company_name} atende ${city} com pontualidade, transparência e garantia em todos os serviços. Orçamento sem compromisso pelo WhatsApp.`,
+  };
+  const [done, setDone] = useState("");
+  const apply = async (key) => { await onUpdate(tenant.id, { [key]: suggestions[key] }); setDone(key); setTimeout(()=>setDone(""),2500); };
+  return (
+    <div className="space-y-4">
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-2"><Sparkles className="text-orange-500"/><h3 className="font-bold text-lg">Assistente de conteúdo</h3></div>
+        <p className="text-sm text-slate-500 mb-5">Geramos textos de venda a partir da sua profissão e cidade. Revise e aplique na sua página com 1 clique.</p>
+        {[
+          {k:"hero_title", label:"Título da página"},
+          {k:"hero_subtitle", label:"Subtítulo (chamada)"},
+          {k:"about", label:"Sobre você"},
+        ].map(item => (
+          <div key={item.k} className="mb-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div className="text-xs font-bold uppercase text-slate-500 mb-1">{item.label}</div>
+            <p className="text-sm text-slate-800">{suggestions[item.k]}</p>
+            <Btn variant="outline" className="mt-3 !py-1.5 !text-xs" onClick={() => apply(item.k)}>{done===item.k ? <><Check size={14}/> Aplicado!</> : "Aplicar na minha página"}</Btn>
+          </div>
+        ))}
+        <p className="text-xs text-slate-400">Em breve: geração com IA avançada (textos, imagens e posts) — Fase 4.</p>
       </Card>
     </div>
   );
